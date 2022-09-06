@@ -14,7 +14,7 @@ public class Shortcut
     ///     Creates new instance of <see cref="Shortcut" />.
     /// </summary>
     /// <param name="path">The path to the shortcut that should be loaded.</param>
-    /// <exception cref="ArgumentException">When any parameter is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">When any parameter is <see langword="null" />.</exception>
     public Shortcut(string path)
     {
         if (path == null) throw new ArgumentNullException(nameof(path));

@@ -12,6 +12,10 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    <StackPanel>
+        <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Button Content="File dialog" Click="Browse_Clicked" />
+        <Button Content="Dialog" Click="ShowDialog" />
+    </StackPanel>
 
 </Window>
