@@ -3,14 +3,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="100"
         x:Class="TaskbarShortcutGroups.Views.ShortcutGroupView"
         Title="ShortcutGroupView">
-        
-        <Design.DataContext>
-                <viewModels:ShortcutGroupViewModel />
-        </Design.DataContext>
-        
-        <TextBlock Text="{Binding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        
+
+    <Design.DataContext>
+        <viewModels:ShortcutGroupViewModel />
+    </Design.DataContext>
+
+    <TextBlock Text="{Binding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
 </Window>

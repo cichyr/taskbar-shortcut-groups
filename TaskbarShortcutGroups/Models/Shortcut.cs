@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
@@ -11,7 +12,7 @@ public class Shortcut
     private readonly IShellLink shellLink;
 
     /// <summary>
-    ///     Creates new instance of <see cref="Shortcut" />.
+    ///     Creates new instance of <see cref="TaskbarShortcutGroups.Models.Shortcut" />.
     /// </summary>
     /// <param name="path">The path to the shortcut that should be loaded.</param>
     /// <exception cref="ArgumentException">When any parameter is <see langword="null" />.</exception>
@@ -27,7 +28,7 @@ public class Shortcut
     }
 
     /// <summary>
-    ///     Creates new instance of <see cref="Shortcut" />.
+    ///     Creates new instance of <see cref="TaskbarShortcutGroups.Models.Shortcut" />.
     /// </summary>
     public Shortcut()
     {
@@ -55,6 +56,38 @@ public class Shortcut
         {
             if (value.Length > 260) throw new ArgumentException("The length of the new path should not exceed 260.");
             shellLink.SetPath(value);
+        }
+    }
+
+    /// <summary>
+    ///     Gets or sets the window style of the executed shortcut.
+    /// </summary>
+    /// <exception cref="ArgumentException">When provided with unsupported <see cref="ProcessWindowStyle" /> value.</exception>
+    public ProcessWindowStyle WindowStyle
+    {
+        get
+        {
+            shellLink.GetShowCmd(out var cmdShow);
+            return cmdShow switch
+            {
+                0 => ProcessWindowStyle.Hidden,
+                1 => ProcessWindowStyle.Normal,
+                2 => ProcessWindowStyle.Minimized,
+                3 => ProcessWindowStyle.Maximized,
+                _ => ProcessWindowStyle.Normal
+            };
+        }
+        set
+        {
+            var cmdShow = value switch
+            {
+                ProcessWindowStyle.Hidden => 0,
+                ProcessWindowStyle.Normal => 1,
+                ProcessWindowStyle.Minimized => 2,
+                ProcessWindowStyle.Maximized => 3,
+                _ => throw new ArgumentException("Unsupported value")
+            };
+            shellLink.SetShowCmd(cmdShow);
         }
     }
 
@@ -130,5 +163,14 @@ public class Shortcut
                 throw new ArgumentException("The length of the path to a new icon should not exceed 260.");
             shellLink.SetIconLocation(value, 0);
         }
+    }
+
+    /// <summary>
+    ///     Saves the shortcut in provided path.
+    /// </summary>
+    /// <param name="path">The path to the saving directory.</param>
+    public void Save(string path)
+    {
+        ((IPersistFile) shellLink).Save(Path.Combine(path, Name), false);
     }
 }

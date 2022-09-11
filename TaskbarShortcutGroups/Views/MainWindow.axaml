@@ -3,7 +3,7 @@
         xmlns:vm="using:TaskbarShortcutGroups.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         x:Class="TaskbarShortcutGroups.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="TaskbarShortcutGroups">
@@ -14,6 +14,22 @@
 
     <StackPanel>
         <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        
+        <ListBox Items="{Binding ShortcutGroups}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Button>
+                        <Panel>
+                            <Image Width="75" Height="50" Source="{Binding IconPath}" />
+                            <TextBlock Text="{Binding Name}" />
+                        </Panel>
+                    </Button>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <Button Content="Add new group" />
+        
         <Button Content="File dialog" Click="Browse_Clicked" />
         <Button Content="Dialog" Click="ShowDialog" />
     </StackPanel>

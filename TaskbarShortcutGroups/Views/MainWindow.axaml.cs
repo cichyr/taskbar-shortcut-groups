@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using TaskbarShortcutGroups.ViewModels;
@@ -12,8 +14,13 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+#if DEBUG
+        this.AttachDevTools();
+#endif
+        Width = 600;
+        Height = 400;
     }
-    
+
     public async Task<string> OpenFileDialog()
     {
         var dialog = new OpenFileDialog
@@ -24,13 +31,13 @@ public partial class MainWindow : Window
             Title = "Pick shortcut"
         };
         var result = await dialog.ShowAsync(this);
-        return result.First();
+        return result?.First() ?? string.Empty;
     }
 
     public async void Browse_Clicked(object sender, RoutedEventArgs args)
     {
-        string path = await OpenFileDialog();
-        var context = this.DataContext as MainWindowViewModel;
+        var path = await OpenFileDialog();
+        var context = DataContext as MainWindowViewModel;
         context!.OpenShortcut(path);
     }
 

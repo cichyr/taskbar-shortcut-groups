@@ -1,14 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Avalonia.Controls;
-using Avalonia.Dialogs;
 using TaskbarShortcutGroups.Models;
 
 namespace TaskbarShortcutGroups.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    public string Greeting => "Welcome to Avalonia!";
+    public string Greeting => "Welcome to Taskbar Shortcut Groups!";
+
+    public ObservableCollection<ShortcutGroup> ShortcutGroups { get; }
+
+    public MainWindowViewModel()
+    {
+        ShortcutGroups = new();
+    }
 
     public void OpenShortcut(string path)
     {
@@ -18,6 +23,7 @@ public class MainWindowViewModel : ViewModelBase
         process.FileName = sc.ExecutablePath;
         process.WorkingDirectory = sc.WorkingDirectory;
         process.UseShellExecute = true;
+        process.WindowStyle = sc.WindowStyle;
         Process.Start(process);
     }
 }
