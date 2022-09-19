@@ -5,11 +5,13 @@ namespace TaskbarShortcutGroups.ViewModels;
 
 public class ShortcutGroupViewModel : ViewModelBase
 {
+    private ShortcutGroup shortcutGroup;
     public string Content => "ShortcutGroupView Content";
 
-    private ShortcutGroup shortcutGroup;
-
     public string Name => shortcutGroup.Name;
-    public ObservableCollection<Shortcut> Shortcuts => shortcutGroup.Shortcuts;
-    
+    public ObservableCollection<Shortcut> Shortcuts => new(shortcutGroup.Shortcuts);
+
+    public void CreateNewGroup(string groupName)
+    {
+    }
 }

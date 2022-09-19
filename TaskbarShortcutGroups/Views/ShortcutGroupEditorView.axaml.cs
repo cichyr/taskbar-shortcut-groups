@@ -3,9 +3,9 @@ using Avalonia.Markup.Xaml;
 
 namespace TaskbarShortcutGroups.Views;
 
-public partial class ShortcutGroupView : Window
+public partial class ShortcutGroupEditorView : UserControl
 {
-    public ShortcutGroupView()
+    public ShortcutGroupEditorView()
     {
         InitializeComponent();
     }

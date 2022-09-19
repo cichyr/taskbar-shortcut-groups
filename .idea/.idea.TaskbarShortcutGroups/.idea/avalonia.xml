@@ -5,6 +5,9 @@
       <map>
         <entry key="TaskbarShortcutGroups/App.axaml" value="TaskbarShortcutGroups/TaskbarShortcutGroups.csproj" />
         <entry key="TaskbarShortcutGroups/Views/MainWindow.axaml" value="TaskbarShortcutGroups/TaskbarShortcutGroups.csproj" />
+        <entry key="TaskbarShortcutGroups/Views/ShortcutGroupEditor.axaml" value="TaskbarShortcutGroups/TaskbarShortcutGroups.csproj" />
+        <entry key="TaskbarShortcutGroups/Views/ShortcutGroupEditorView.axaml" value="TaskbarShortcutGroups/TaskbarShortcutGroups.csproj" />
+        <entry key="TaskbarShortcutGroups/Views/ShortcutGroupListView.axaml" value="TaskbarShortcutGroups/TaskbarShortcutGroups.csproj" />
         <entry key="TaskbarShortcutGroups/Views/ShortcutGroupView.axaml" value="TaskbarShortcutGroups/TaskbarShortcutGroups.csproj" />
       </map>
     </option>
