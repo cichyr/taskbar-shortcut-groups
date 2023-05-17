@@ -1,0 +1,9 @@
+IPersistFile
+IShellLinkW
+ShellLink
+ExtractIcon
+MAX_PATH
+SLGP_FLAGS
+ExtractIconA
+ExtractIconExA
+ExtractIconExW

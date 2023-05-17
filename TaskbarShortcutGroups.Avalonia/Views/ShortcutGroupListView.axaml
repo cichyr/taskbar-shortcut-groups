@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
+             xmlns:converters1="clr-namespace:TaskbarShortcutGroups.Avalonia.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TaskbarShortcutGroups.Avalonia.Views.ShortcutGroupListView">
+    <Design.DataContext>
+        <viewModels:ShortcutGroupListViewModel />
+    </Design.DataContext>
+    <UserControl.Resources>
+        <converters1:PathToBitmapConverter x:Key="PathToBitmapConverter" />
+    </UserControl.Resources>
+    <StackPanel>
+        <ListBox Items="{Binding ShortcutGroups}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Button Command="{Binding DataContext.NavigateToGroup, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}}" CommandParameter="{Binding .}" HorizontalAlignment="Stretch">
+                        <DockPanel Width="NaN">
+                            <Image Width="75" Height="75" Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}" DockPanel.Dock="Left" />
+                            <TextBlock Text="{Binding Name}" DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </DockPanel>
+                    </Button>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Add new group" Command="{Binding AddNewGroup}" />
+    </StackPanel>
+</UserControl>

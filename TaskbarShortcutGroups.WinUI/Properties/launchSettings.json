@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TaskbarShortcutGroups.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "TaskbarShortcutGroups.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
