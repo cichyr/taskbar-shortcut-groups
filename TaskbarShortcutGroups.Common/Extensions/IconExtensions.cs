@@ -5,6 +5,13 @@ namespace TaskbarShortcutGroups.Common.Extensions;
 
 public static class IconExtensions
 {
+    /// <summary>
+    /// Saves icon to file in given path.
+    /// </summary>
+    /// <param name="icon"> The icon to save. </param>
+    /// <param name="pathToSave"> The path of target file. </param>
+    /// <param name="overwriteIfExists"> Whether the icon should be overwritten. </param>
+    /// <exception cref="InvalidOperationException"> When <paramref name="pathToSave" /> exists and <paramref name="overwriteIfExists" /> is false. </exception>
     public static void Save(this Icon icon, string pathToSave, bool overwriteIfExists = false)
     {
         if (!Path.HasExtension(pathToSave) || Path.GetExtension(pathToSave) != ".ico")
@@ -25,34 +32,39 @@ public static class IconExtensions
         icon.Save(fileStream);
     }
 
+    /// <summary>
+    /// Converts any bitmap to icon.
+    /// </summary>
+    /// <param name="sourceBitmap"> The bitmap to convert. </param>
+    /// <returns> The converted icon. </returns>
     public static Icon ToIcon(this Bitmap sourceBitmap)
     {
         using var memoryStream = new MemoryStream();
         using var binaryWriter = new BinaryWriter(memoryStream);
-        
+
         // Header
-        binaryWriter.Write((short)0);   // 0 : reserved
-        binaryWriter.Write((short)1);   // 2 : 1=ico, 2=cur
-        binaryWriter.Write((short)1);   // 4 : number of images
-        
+        binaryWriter.Write((short)0); // 0 : reserved
+        binaryWriter.Write((short)1); // 2 : 1=ico, 2=cur
+        binaryWriter.Write((short)1); // 4 : number of images
+
         // Image directory
         var w = sourceBitmap.Width;
         if (w >= 256)
             w = 0;
-        binaryWriter.Write((byte)w);    // 0 : width of image
+        binaryWriter.Write((byte)w); // 0 : width of image
         var h = sourceBitmap.Height;
         if (h >= 256)
             h = 0;
-        binaryWriter.Write((byte)h);    // 1 : height of image
-        binaryWriter.Write((byte)0);    // 2 : number of colors in palette
-        binaryWriter.Write((byte)0);    // 3 : reserved
-        binaryWriter.Write((short)0);   // 4 : number of color planes
-        binaryWriter.Write((short)0);   // 6 : bits per pixel
+        binaryWriter.Write((byte)h); // 1 : height of image
+        binaryWriter.Write((byte)0); // 2 : number of colors in palette
+        binaryWriter.Write((byte)0); // 3 : reserved
+        binaryWriter.Write((short)0); // 4 : number of color planes
+        binaryWriter.Write((short)0); // 6 : bits per pixel
         var sizeHere = memoryStream.Position;
-        binaryWriter.Write(0);     // 8 : image size
+        binaryWriter.Write(0); // 8 : image size
         var start = (int)memoryStream.Position + 4;
-        binaryWriter.Write(start);      // 12: offset of image data
-        
+        binaryWriter.Write(start); // 12: offset of image data
+
         // Image data
         sourceBitmap.Save(memoryStream, ImageFormat.Png);
         var imageSize = (int)memoryStream.Position - start;

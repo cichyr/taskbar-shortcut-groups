@@ -1,14 +1,14 @@
 using System.Linq;
-using FileDialogFilter=Avalonia.Controls.FileDialogFilter;
+using Avalonia.Platform.Storage;
+using TaskbarShortcutGroups.Common.Models;
 
 namespace TaskbarShortcutGroups.Avalonia.Extensions;
 
 public static class FileDialogFilterExtensions
 {
-    public static FileDialogFilter ToAvaloniaFilter(this TaskbarShortcutGroups.Common.Models.FileDialogFilter fileDialogFilter) =>
-        new()
+    public static FilePickerFileType ToAvaloniaFilter(this FileDialogFilter fileDialogFilter) =>
+        new (fileDialogFilter.Name)
         {
-            Name = fileDialogFilter.Name,
-            Extensions = fileDialogFilter.Extensions.ToList(),
+            Patterns = fileDialogFilter.Extensions.ToList(),
         };
 }

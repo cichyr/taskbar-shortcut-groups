@@ -9,9 +9,6 @@ using Windows.Win32.UI.WindowsAndMessaging;
 using TaskbarShortcutGroups.Common.Extensions;
 using IPersistFile = Windows.Win32.System.Com.IPersistFile;
 
-// using Windows.Win32.PInvoke;
-//using TaskbarShortcutGroups.Common.Models.ComImports;
-
 namespace TaskbarShortcutGroups.Common.Models;
 
 public class Shortcut
@@ -43,10 +40,10 @@ public class Shortcut
         {
             if (shellLink != null)
                 return shellLink;
-            
+
             // ReSharper disable SuspiciousTypeConversion.Global - ComImport, nothing I can do
             shellLink = (IShellLinkW)new ShellLink();
-            if (File.Exists(Location)) 
+            if (File.Exists(Location))
                 fixed(char* pszFileName = Location)
                     ((IPersistFile)shellLink).Load(pszFileName, STGM.STGM_READ);
             // ReSharper restore SuspiciousTypeConversion.Global
@@ -118,25 +115,10 @@ public class Shortcut
                 ProcessWindowStyle.Maximized => SHOW_WINDOW_CMD.SW_MAXIMIZE,
                 _ => throw new ArgumentException("Unsupported value")
             };
-            
+
             ShellLink.SetShowCmd(cmdShow);
         }
     }
-
-    /// <summary>
-    /// Gets or sets the description
-    /// </summary>
-    // [XmlIgnore]
-    // public string Description
-    // {
-    //     get
-    //     {
-    //         var description = new StringBuilder(1024);
-    //         ShellLink.GetDescription(description, description.Capacity);
-    //         return description.ToString();
-    //     }
-    //     set => ShellLink.SetDescription(value);
-    // }
 
     /// <summary>
     /// Gets or sets the working directory.
@@ -200,7 +182,7 @@ public class Shortcut
                 ShellLink.GetIconLocation(pszIconPath, (int)PInvoke.MAX_PATH, out piIcon);
                 iconPath = new string(pszIconPath);
             }
-            
+
             return string.IsNullOrEmpty(iconPath)
                 ? null
                 : new IconLocation(iconPath, piIcon);
@@ -255,7 +237,7 @@ public class Shortcut
         {
             if (IconLocation is null)
                 return null;
-            PInvoke.ExtractIconEx(IconLocation.FilePath/*.Replace("%SystemRoot%", @"C:\Windows")*/, IconLocation.Address, out var iconHandler, out _, 1);
+            PInvoke.ExtractIconEx(IconLocation.FilePath, IconLocation.Address, out var iconHandler, out _, 1);
             var icon = Icon.FromHandle(iconHandler.DangerousGetHandle());
             return icon.ToBitmap();
         }

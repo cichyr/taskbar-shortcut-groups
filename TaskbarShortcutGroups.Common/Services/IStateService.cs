@@ -10,4 +10,5 @@ public interface IStateService
     ShortcutGroup CreateGroup();
     Shortcut AddShortcutToGroup(ShortcutGroup group, string path);
     void RemoveShortcutFromGroup(ShortcutGroup group, Shortcut shortcut);
+    void RemoveGroup(ShortcutGroup group);
 }

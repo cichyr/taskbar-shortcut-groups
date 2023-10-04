@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskbarShortcutGroups.Avalo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskbarShortcutGroups.Common", "TaskbarShortcutGroups.Common\TaskbarShortcutGroups.Common.csproj", "{61162024-E9CA-4415-AFC2-B1BF1A5CEF4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskbarShortcutGroups.WinUI", "TaskbarShortcutGroups.WinUI\TaskbarShortcutGroups.WinUI.csproj", "{FB1F49EB-3794-411D-A371-7055D2FB86EC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{ED616ADF-DD39-4D7D-A9F3-C26565E79914}"
+	ProjectSection(SolutionItems) = preProject
+		publish.ps1 = publish.ps1
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,30 +57,6 @@ Global
 		{61162024-E9CA-4415-AFC2-B1BF1A5CEF4E}.Release|x64.Build.0 = Release|Any CPU
 		{61162024-E9CA-4415-AFC2-B1BF1A5CEF4E}.Release|x86.ActiveCfg = Release|Any CPU
 		{61162024-E9CA-4415-AFC2-B1BF1A5CEF4E}.Release|x86.Build.0 = Release|Any CPU
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|Any CPU.Build.0 = Debug|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|Any CPU.Deploy.0 = Debug|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|arm64.ActiveCfg = Debug|ARM64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|arm64.Build.0 = Debug|ARM64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|arm64.Deploy.0 = Debug|ARM64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|x64.ActiveCfg = Debug|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|x64.Build.0 = Debug|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|x64.Deploy.0 = Debug|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|x86.ActiveCfg = Debug|x86
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|x86.Build.0 = Debug|x86
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Debug|x86.Deploy.0 = Debug|x86
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|Any CPU.ActiveCfg = Release|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|Any CPU.Build.0 = Release|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|Any CPU.Deploy.0 = Release|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|arm64.ActiveCfg = Release|ARM64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|arm64.Build.0 = Release|ARM64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|arm64.Deploy.0 = Release|ARM64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|x64.ActiveCfg = Release|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|x64.Build.0 = Release|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|x64.Deploy.0 = Release|x64
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|x86.ActiveCfg = Release|x86
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|x86.Build.0 = Release|x86
-		{FB1F49EB-3794-411D-A371-7055D2FB86EC}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

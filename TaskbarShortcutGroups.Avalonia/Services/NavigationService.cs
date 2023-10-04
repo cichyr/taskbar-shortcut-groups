@@ -24,19 +24,22 @@ internal class NavigationService : IAvaloniaNavigationService
     public void Navigate<TViewModel>(params object[] parameters) where TViewModel : ViewModelBase
     {
         var viewModel = CreateViewModelInstance<TViewModel>(parameters);
-        if (!string.IsNullOrEmpty(viewModel.TitleNamePrefix))
-            CurrentWindow.Title = $"{viewModel.TitleNamePrefix} - {baseTitle}";
-        NavigationStack.Push(CurrentWindow.Content);
+        UpdateWindowTitle(viewModel);
+        NavigationStack.Push(CurrentWindow.Content!);
         CurrentWindow.Content = viewModel;
     }
 
     public void Navigate<TViewModel>(TViewModel viewModel) where TViewModel : ViewModelBase
     {
-        if (!string.IsNullOrEmpty(viewModel.TitleNamePrefix))
-            CurrentWindow.Title = $"{viewModel.TitleNamePrefix} - {baseTitle}";
-        NavigationStack.Push(CurrentWindow.Content);
+        UpdateWindowTitle(viewModel);
+        NavigationStack.Push(CurrentWindow.Content!);
         CurrentWindow.Content = viewModel;
     }
+
+    private void UpdateWindowTitle(ViewModelBase viewModel)
+        => CurrentWindow.Title = string.IsNullOrEmpty(viewModel.TitleNamePrefix)
+            ? baseTitle
+            : $"{viewModel.TitleNamePrefix} - {baseTitle}";
 
     public void NavigateBack()
     {
@@ -52,7 +55,7 @@ internal class NavigationService : IAvaloniaNavigationService
     public void Setup(Window window)
     {
         CurrentWindow = window ?? throw new ArgumentNullException(nameof(window));
-        baseTitle = window.Title;
+        baseTitle = window.Title!;
     }
 
     private static ViewModelBase CreateViewModelInstance<TViewModel>(object[] parameters)

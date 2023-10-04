@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using TaskbarShortcutGroups.Avalonia.Extensions;
 using TaskbarShortcutGroups.Common.Services;
 using FileDialogFilter = TaskbarShortcutGroups.Common.Models.FileDialogFilter;
@@ -18,12 +18,13 @@ public class DialogService : IDialogService
 
     public async Task<string[]?> OpenFileDialog(string title, bool allowMultipleFiles, params FileDialogFilter[] filters)
     {
-        var dialog = new OpenFileDialog
+        var pickerOptions = new FilePickerOpenOptions
         {
             AllowMultiple = allowMultipleFiles,
-            Filters = filters.Select(f => f.ToAvaloniaFilter()).ToList(),
-            Title = title
+            Title = title,
+            FileTypeFilter = filters.Select(f => f.ToAvaloniaFilter()).ToArray()
         };
-        return await dialog.ShowAsync(navigationService.CurrentWindow);
+        var selectedFiles = await navigationService.CurrentWindow.StorageProvider.OpenFilePickerAsync(pickerOptions);
+        return selectedFiles.Select(x => x.Path.LocalPath).ToArray();
     }
 }

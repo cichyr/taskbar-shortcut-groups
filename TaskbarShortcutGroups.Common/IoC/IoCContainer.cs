@@ -8,8 +8,8 @@ namespace TaskbarShortcutGroups.Common.IoC;
 /// Represents IoC container which allows injecting dependencies into newly created objects.
 /// </summary>
 /// <remarks>
-/// This definitely is not the best implementation, but it was created for learning purposes.
-/// If need arises I will switch to some better IoC container.
+/// This definitely is not the best implementation (it rather is one of the worst ones out there xD) but it was created
+/// for learning purposes. If need arises I will switch to some framework.
 /// </remarks>
 public class IoCContainer
 {
@@ -85,12 +85,7 @@ public class IoCContainer
 
     private class Factory<T> : IFactory<T>
     {
-        private readonly TypeRegistration typeRegistration;
-
-        public Factory()
-        {
-            typeRegistration = new TypeRegistration(typeof(T), LifeTime.Singleton);
-        }
+        private readonly TypeRegistration typeRegistration = new(typeof(T), LifeTime.Transient);
 
         public T Construct() => (T)typeRegistration.GetInstance();
 

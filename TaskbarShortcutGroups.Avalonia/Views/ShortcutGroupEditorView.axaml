@@ -13,37 +13,36 @@
         <converters1:PathToBitmapConverter x:Key="PathToBitmapConverter" />
         <converters1:SystemBitmapToAvaloniaBitmapConverter x:Key="SystemBitmapToAvaloniaBitmapConverter" />
     </UserControl.Resources>
-    <StackPanel>
-        <StackPanel>
-            <Label Content="Name" />
-            <TextBox Text="{Binding Name}" />
-        </StackPanel>
-        <StackPanel>
-            <Label Content="Icon" />
-            <DockPanel>
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" Margin="10,20,10,0">
+            <Label Content="Name" FontSize="18" />
+            <TextBox Grid.Row="1" Text="{Binding Name}" />
+        </Grid>
+        <Grid Grid.Row="1" RowDefinitions="Auto,Auto" Margin="10,20,10,0">
+            <Label Content="Icon" FontSize="18" />
+            <DockPanel Grid.Row="1">
                 <Image Width="75" Height="75" Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}" DockPanel.Dock="Left" />
                 <TextBox Text="{Binding IconPath}" DockPanel.Dock="Top" />
                 <Button Content="Browse..." Command="{Binding SelectIcon}" DockPanel.Dock="Bottom" />
             </DockPanel>
-        </StackPanel>
-        <StackPanel>
-            <Label Content="Shortcuts" />
-            <ListBox Items="{Binding Shortcuts}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <DockPanel Width="NaN">
-                            <Image Width="40" Height="40" Source="{Binding Icon, Converter={StaticResource SystemBitmapToAvaloniaBitmapConverter}}" DockPanel.Dock="Left" />
-                            <DockPanel Width="NaN">
-                                <TextBlock Text="{Binding Name}" DockPanel.Dock="Top" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBlock Text="{Binding Path}" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Grid>
+        <Grid Grid.Row="2" RowDefinitions="Auto,*,Auto" Margin="10,20,10,0">
+            <Label Content="Shortcuts" FontSize="18" />
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
+                <ItemsControl ItemsSource="{Binding Shortcuts}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel Width="NaN" Margin="10,20,10,0" ToolTip.Tip="{Binding Path}">
+                                <Image Width="40" Height="40" Source="{Binding Icon, Converter={StaticResource SystemBitmapToAvaloniaBitmapConverter}}" DockPanel.Dock="Left" />
+                                <TextBlock Margin="10,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <Button Margin="10,0,0,0" Content="Remove" Command="{Binding $parent[ItemsControl].DataContext.RemoveShortcut}" CommandParameter="{Binding .}" HorizontalAlignment="Right" DockPanel.Dock="Right" />
                             </DockPanel>
-                            <Button Content="Remove" Command="{Binding DataContext.RemoveShortcut, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" CommandParameter="{Binding .}" DockPanel.Dock="Right" />
-                        </DockPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <Button Content="Add" Command="{Binding SelectShortcut}" />
-        </StackPanel>
-        <Button Content="Save" Command="{Binding NavigateBack}" />
-    </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <Button Grid.Row="2" Content="Add" Command="{Binding SelectShortcut}" />
+        </Grid>
+        <Button Grid.Row="3" Content="Save" Command="{Binding NavigateBack}" />
+    </Grid>
 </UserControl>

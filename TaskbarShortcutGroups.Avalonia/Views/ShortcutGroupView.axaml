@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <converters:SystemBitmapToAvaloniaBitmapConverter x:Key="SystemBitmapToAvaloniaBitmapConverter" />
     </UserControl.Resources>
-    <ListBox Items="{Binding Shortcuts}">
+    <ListBox ItemsSource="{Binding Shortcuts}">
         <ListBox.ItemTemplate>
             <DataTemplate>
                 <Button Command="{Binding RunAndStopApplication}">

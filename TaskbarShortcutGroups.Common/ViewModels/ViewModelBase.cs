@@ -1,10 +1,9 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using TaskbarShortcutGroups.Common.Services;
 
 namespace TaskbarShortcutGroups.Common.ViewModels;
 
-public abstract class ViewModelBase : INotifyPropertyChanged
+public abstract class ViewModelBase : ObservableObject
 {
     protected readonly INavigationService navigationService;
     protected readonly IStateService stateService;
@@ -19,22 +18,9 @@ public abstract class ViewModelBase : INotifyPropertyChanged
     public string TitleNamePrefix
     {
         get => titleNamePrefix;
-        protected init
-        {
-            titleNamePrefix = value;
-            OnPropertyChanged();
-        }
+        protected init => SetProperty(ref titleNamePrefix, value);
     }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     public void NavigateBack()
-    {
-        navigationService.NavigateBack();
-    }
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+        => navigationService.NavigateBack();
 }

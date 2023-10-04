@@ -13,18 +13,22 @@
         <converters1:PathToBitmapConverter x:Key="PathToBitmapConverter" />
     </UserControl.Resources>
     <StackPanel>
-        <ListBox Items="{Binding ShortcutGroups}">
+        <ListBox ItemsSource="{Binding ShortcutGroups}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Button Command="{Binding DataContext.NavigateToGroup, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}}" CommandParameter="{Binding .}" HorizontalAlignment="Stretch">
-                        <DockPanel Width="NaN">
-                            <Image Width="75" Height="75" Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}" DockPanel.Dock="Left" />
-                            <TextBlock Text="{Binding Name}" DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        </DockPanel>
-                    </Button>
+                    <Grid ColumnDefinitions="*,Auto" Width="NaN">
+                        <Button Command="{Binding $parent[ListBox].DataContext.NavigateToGroup}" CommandParameter="{Binding .}" HorizontalAlignment="Stretch" Padding="0,0">
+                            <DockPanel Width="NaN">
+                                <Image Width="50" Height="50" Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}" />
+                                <TextBlock Text="{Binding Name}" DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </DockPanel>
+                        </Button>
+                        <Button Grid.Column="1" Command="{Binding $parent[ListBox].DataContext.RemoveGroup}" CommandParameter="{Binding}" HorizontalAlignment="Right" Content="Remove" />
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <Button Content="Add new group" Command="{Binding AddNewGroup}" />
+        <Button Content="Open shortcuts location" Command="{Binding OpenShortcutsLocation}" />
     </StackPanel>
 </UserControl>

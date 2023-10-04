@@ -3,9 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
+        WindowStartupLocation="Manual"
         x:Class="TaskbarShortcutGroups.Avalonia.Views.GroupWindow"
         Title="GroupWindow"
         SystemDecorations="None"
         SizeToContent="WidthAndHeight">
-    Welcome to Avalonia!
 </Window>
