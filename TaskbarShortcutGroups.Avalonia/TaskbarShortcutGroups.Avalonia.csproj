@@ -1,13 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <AssemblyName>TaskbarShortcutGroups</AssemblyName>
+        <AssemblyName>TaskbarShortcutGroups.Avalonia</AssemblyName>
         <RootNamespace>TaskbarShortcutGroups.Avalonia</RootNamespace>
         <OutputType>WinExe</OutputType>
         <UseWindowsForms>true</UseWindowsForms>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFramework>net7.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
-        <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
-        <TrimMode>copyused</TrimMode>
     </PropertyGroup>
     <PropertyGroup>
         <Authors>Dominik Wolny</Authors>
@@ -16,15 +14,13 @@
         <RepositoryUrl>https://github.com/cichyr/taskbar-shortcut-groups</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
-        <None Remove=".gitignore" />
+        <Content Include="Licenses\*.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <ItemGroup>
-        <!--This helps with theme dll-s trimming.
-        If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
-        https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
-        <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
-        <TrimmableAssembly Include="Avalonia.Themes.Default" />
+        <AvaloniaResource Include="Assets\**" />
+        <None Remove=".gitignore" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.4" />
