@@ -11,7 +11,7 @@ namespace TaskbarShortcutGroups.Common.IoC;
 /// This definitely is not the best implementation (it rather is one of the worst ones out there xD) but it was created
 /// for learning purposes. If need arises I will switch to some framework.
 /// </remarks>
-public class IoCContainer
+public class IoCContainer : IDisposable
 {
     private readonly IDictionary<Type, object> singletonScope;
     private readonly IDictionary<Type, TypeRegistration> typeRegistrations;
@@ -24,6 +24,12 @@ public class IoCContainer
 
     public static IoCContainer Container { get; } = new();
 
+    public void Dispose()
+        => singletonScope.Values
+            .Where(i => i is IDisposable)
+            .Cast<IDisposable>()
+            .ForEach(i => i.Dispose());
+
     public IoCContainer RegisterType<TBaseType, TImplementation>(LifeTime lifeTime) =>
         RegisterType(typeof(TBaseType), typeof(TImplementation), lifeTime);
 
@@ -31,6 +37,7 @@ public class IoCContainer
     {
         if (!typeRegistrations.TryAdd(baseType, new TypeRegistration(baseType, implementationType, lifeTime)))
             throw new ArgumentException("Cannot register same type twice");
+
         return this;
     }
 
@@ -41,7 +48,10 @@ public class IoCContainer
         => RegisterType<TInterface, TImplementation>(LifeTime.Transient);
 
     public IoCContainer RegisterFactory<TImplementation>() =>
-        Register<IFactory<TImplementation>>(new Factory<TImplementation>());
+        RegisterTransient<IFactory<TImplementation>, Factory<TImplementation>>();
+
+    public IoCContainer RegisterFactory<TInterface, TImplementation>() =>
+        RegisterTransient<IFactory<TInterface>, Factory<TImplementation>>();
 
     public IoCContainer Register<T>(T implementation)
     {
@@ -67,7 +77,7 @@ public class IoCContainer
         return newInstance;
     }
 
-    private void AddSingletonToScope<T>([NotNull]T instance)
+    private void AddSingletonToScope<T>([NotNull] T instance)
     {
         if (!singletonScope.TryAdd(instance!.GetType(), instance))
             throw new ArgumentException(
@@ -146,7 +156,6 @@ public class IoCContainer
             if (fittingFactories.Length == 0)
                 throw new ArgumentException("There is no constructor fitting to the provided parameters");
             foreach (var factory in fittingFactories)
-            {
                 try
                 {
                     return factory.Construct(additionalParameters);
@@ -155,7 +164,6 @@ public class IoCContainer
                 {
                     Console.WriteLine(e);
                 }
-            }
 
             throw new InvalidOperationException($"Failed to construct instance of type '{ImplementationType}'");
         }

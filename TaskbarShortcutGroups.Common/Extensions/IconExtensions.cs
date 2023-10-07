@@ -11,8 +11,9 @@ public static class IconExtensions
     /// <param name="icon"> The icon to save. </param>
     /// <param name="pathToSave"> The path of target file. </param>
     /// <param name="overwriteIfExists"> Whether the icon should be overwritten. </param>
+    /// <returns> The given <paramref name="icon"/>. </returns>
     /// <exception cref="InvalidOperationException"> When <paramref name="pathToSave" /> exists and <paramref name="overwriteIfExists" /> is false. </exception>
-    public static void Save(this Icon icon, string pathToSave, bool overwriteIfExists = false)
+    public static Icon Save(this Icon icon, string pathToSave, bool overwriteIfExists = false)
     {
         if (!Path.HasExtension(pathToSave) || Path.GetExtension(pathToSave) != ".ico")
             pathToSave = Path.ChangeExtension(pathToSave, ".ico");
@@ -30,6 +31,7 @@ public static class IconExtensions
 
         using var fileStream = new FileStream(pathToSave, FileMode.Create, FileAccess.Write);
         icon.Save(fileStream);
+        return icon;
     }
 
     /// <summary>

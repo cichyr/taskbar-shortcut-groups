@@ -2,13 +2,13 @@ using TaskbarShortcutGroups.Common.Models;
 
 namespace TaskbarShortcutGroups.Common.Services;
 
-public interface IStateService
+public interface IStateService : IDisposable
 {
-    List<ShortcutGroup> ShortcutGroups { get; }
+    List<IShortcutGroup> ShortcutGroups { get; }
     void SaveState();
     void LoadState();
-    ShortcutGroup CreateGroup();
-    Shortcut AddShortcutToGroup(ShortcutGroup group, string path);
-    void RemoveShortcutFromGroup(ShortcutGroup group, Shortcut shortcut);
-    void RemoveGroup(ShortcutGroup group);
+    IShortcutGroup CreateGroup();
+    IShortcut AddShortcutToGroup(IShortcutGroup group, string path);
+    void RemoveShortcutFromGroup(IShortcutGroup group, IShortcut shortcut);
+    void RemoveGroup(IShortcutGroup group);
 }

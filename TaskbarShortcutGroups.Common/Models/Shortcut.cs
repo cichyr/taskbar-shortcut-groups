@@ -1,22 +1,20 @@
 using System.Diagnostics;
 using System.Drawing;
-using Icon = System.Drawing.Icon;
-using System.Xml.Serialization;
 using Windows.Win32;
 using Windows.Win32.System.Com;
 using Windows.Win32.UI.Shell;
 using Windows.Win32.UI.WindowsAndMessaging;
 using TaskbarShortcutGroups.Common.Extensions;
-using IPersistFile = Windows.Win32.System.Com.IPersistFile;
 
 namespace TaskbarShortcutGroups.Common.Models;
 
-public class Shortcut
+public class Shortcut : IShortcut
 {
+    private Bitmap? iconBitmap;
     private IShellLinkW? shellLink;
 
     /// <summary>
-    /// Creates new instance of <see cref="Shortcut" />.
+    /// Creates a new instance of <see cref="Shortcut" />.
     /// </summary>
     /// <param name="path"> The path to the shortcut that should be loaded. </param>
     /// <exception cref="ArgumentNullException"> When any parameter is <see langword="null" />. </exception>
@@ -27,13 +25,16 @@ public class Shortcut
     }
 
     /// <summary>
-    /// Creates new instance of <see cref="Shortcut" />.
+    /// Creates a new instance of <see cref="Shortcut" />.
     /// </summary>
     public Shortcut()
     {
         Location = string.Empty;
     }
 
+    /// <summary>
+    /// Gets the shell link.
+    /// </summary>
     private unsafe IShellLinkW ShellLink
     {
         get
@@ -44,30 +45,23 @@ public class Shortcut
             // ReSharper disable SuspiciousTypeConversion.Global - ComImport, nothing I can do
             shellLink = (IShellLinkW)new ShellLink();
             if (File.Exists(Location))
-                fixed(char* pszFileName = Location)
+                fixed (char* pszFileName = Location)
+                {
                     ((IPersistFile)shellLink).Load(pszFileName, STGM.STGM_READ);
+                }
             // ReSharper restore SuspiciousTypeConversion.Global
+
             return shellLink;
         }
     }
 
-    /// <summary>
-    /// Gets or sets the name of the shortcut.
-    /// </summary>
-    [XmlAttribute(nameof(Name))]
-    public string? Name { get; set; }
+    /// <inheritdoc />
+    public string Name { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Gets or sets the location of the shortcut.
-    /// </summary>
-    [XmlAttribute(nameof(Location))]
+    /// <inheritdoc />
     public string Location { get; set; }
 
-    /// <summary>
-    /// Gets or sets path to the executable.
-    /// </summary>
-    /// <exception cref="ArgumentException"> If provided path is longer than allowed (260 characters). </exception>
-    [XmlIgnore]
+    /// <inheritdoc />
     public unsafe string ExecutablePath
     {
         get
@@ -86,11 +80,7 @@ public class Shortcut
         }
     }
 
-    /// <summary>
-    /// Gets or sets the window style of the executed shortcut.
-    /// </summary>
-    /// <exception cref="ArgumentException"> When provided with unsupported <see cref="ProcessWindowStyle" /> value. </exception>
-    [XmlIgnore]
+    /// <inheritdoc />
     public ProcessWindowStyle WindowStyle
     {
         get
@@ -120,11 +110,7 @@ public class Shortcut
         }
     }
 
-    /// <summary>
-    /// Gets or sets the working directory.
-    /// </summary>
-    /// <exception cref="ArgumentException"> If provided path is longer than allowed (260 characters). </exception>
-    [XmlIgnore]
+    /// <inheritdoc />
     public unsafe string WorkingDirectory
     {
         get
@@ -143,11 +129,7 @@ public class Shortcut
         }
     }
 
-    /// <summary>
-    /// Gets or sets the startup arguments of the executable to which <see cref="ExecutablePath" /> is pointing to.
-    /// </summary>
-    /// <exception cref="ArgumentException"> If provided description is too long. </exception>
-    [XmlIgnore]
+    /// <inheritdoc />
     public unsafe string Arguments
     {
         get
@@ -166,11 +148,7 @@ public class Shortcut
         }
     }
 
-    /// <summary>
-    /// Gets or sets the icon location.
-    /// </summary>
-    /// <exception cref="ArgumentException"> If provided path is longer than allowed (260 characters). </exception>
-    [XmlIgnore]
+    /// <inheritdoc />
     public unsafe IconLocation? IconLocation
     {
         get
@@ -196,50 +174,24 @@ public class Shortcut
         }
     }
 
-    public Bitmap IconBitmap
-        => MemorySafeIcon ?? Icon.ExtractAssociatedIcon(ExecutablePath).ToBitmap();
-
-    /// <summary>
-    /// Gets the small icon for the shortcut.
-    /// </summary>
-    [XmlIgnore]
-    public Icon? SmallIcon
+    /// <inheritdoc />
+    public Bitmap? IconBitmap
     {
         get
         {
-            if (IconLocation is null)
-                return null;
-            PInvoke.ExtractIconEx(IconLocation.FilePath, IconLocation.Address, out _, out var iconHandler, 1);
-            var icon = Icon.FromHandle(iconHandler.DangerousGetHandle());
-            return icon;
-        }
-    }
+            if (iconBitmap is not null)
+                return iconBitmap;
 
-    public Bitmap? MemorySafeIcon
-    {
-        get
-        {
             if (IconLocation is null)
-                return null;
+            {
+                iconBitmap = Icon.ExtractAssociatedIcon(ExecutablePath)?.ToBitmap() ?? null;
+                return iconBitmap;
+            }
+
             using var iconHandle = PInvoke.ExtractIcon(IconLocation.FilePath, (uint)IconLocation.Address);
             var icon = Icon.FromHandle(iconHandle.DangerousGetHandle());
-            return icon.ToBitmap();
-        }
-    }
-
-    /// <summary>
-    /// Gets the large icon for the shortcut.
-    /// </summary>
-    [XmlIgnore]
-    public Bitmap? LargeIcon
-    {
-        get
-        {
-            if (IconLocation is null)
-                return null;
-            PInvoke.ExtractIconEx(IconLocation.FilePath, IconLocation.Address, out var iconHandler, out _, 1);
-            var icon = Icon.FromHandle(iconHandler.DangerousGetHandle());
-            return icon.ToBitmap();
+            iconBitmap = icon.ToBitmap();
+            return iconBitmap;
         }
     }
 
@@ -248,5 +200,13 @@ public class Shortcut
     /// </summary>
     /// <param name="path"> The path to the saving directory. </param>
     public void Save(string path)
-        => ((IPersistFile)ShellLink).Save(Path.Combine(path, $"{Name}.lnk"), false);
+        // ReSharper disable once SuspiciousTypeConversion.Global - ComImport, nothing I can do
+        => (ShellLink as IPersistFile).Save(Path.Combine(path, $"{Name}.lnk"), false);
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        iconBitmap?.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

@@ -33,8 +33,9 @@ public class App : Application
             .RegisterSingleton<INavigationService, NavigationService>()
             .RegisterSingleton<IDialogService, DialogService>()
             .RegisterSingleton<ILicenseProvider, LicenseProvider>()
-            .RegisterFactory<Shortcut>()
-            .RegisterFactory<ShortcutGroup>()
+            .RegisterFactory<IShortcut, Shortcut>()
+            .RegisterFactory<IShortcutGroup, ShortcutGroup>()
+            .RegisterSingleton<IStateStore, StateStore>()
             .RegisterSingleton<IStateService, StateService>()
             .RegisterFactory<AboutViewModel>()
             .RegisterFactory<ShortcutViewModel>()
@@ -46,10 +47,10 @@ public class App : Application
         switch (lifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
+                desktop.Exit += (_, _) => IoCContainer.Container.Dispose();
                 if (desktop.Args != null && desktop.Args.Any())
                 {
                     var shortcutGroup = stateService.ShortcutGroups.FirstOrDefault(sg => sg.Name == desktop.Args[0]);
-                    //desktop.Exit += -> Add disposal of shortcut groups handle
                     if (shortcutGroup is not null)
                     {
                         var groupViewModel = IoCContainer.Container
@@ -63,6 +64,7 @@ public class App : Application
                                 Environment.Exit(0);
                         };
 #endif
+                        desktop.MainWindow.Focusable = true;
                         desktop.MainWindow.Focus();
                         navigationService.Setup(desktop.MainWindow);
                         navigationService.Navigate(groupViewModel);
