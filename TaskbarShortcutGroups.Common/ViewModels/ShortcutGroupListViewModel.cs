@@ -14,10 +14,12 @@ public class ShortcutGroupListViewModel : ViewModelBase
     private readonly IFactory<ShortcutGroupEditorViewModel> groupEditorFactory;
     private ICommand? navigateToGroup;
     private ICommand? removeGroup;
+    private AboutViewModel aboutViewModel;
 
-    public ShortcutGroupListViewModel(INavigationService navigationService, IStateService stateService, IFactory<ShortcutGroupEditorViewModel> groupEditorFactory)
+    public ShortcutGroupListViewModel(INavigationService navigationService, IStateService stateService, IFactory<ShortcutGroupEditorViewModel> groupEditorFactory, IFactory<AboutViewModel> aboutViewModelFactory)
         : base(navigationService, stateService)
     {
+        aboutViewModel = aboutViewModelFactory.Construct();
         this.groupEditorFactory = groupEditorFactory;
         ShortcutGroups = new ObservableCollection<ShortcutGroupEditorViewModel>(stateService.ShortcutGroups.Select(group => groupEditorFactory.Construct(group)));
     }
@@ -55,6 +57,9 @@ public class ShortcutGroupListViewModel : ViewModelBase
         ShortcutGroups.Add(shortcutGroup);
         navigationService.Navigate(shortcutGroup);
     }
+
+    public void OpenAboutView()
+        => navigationService.Navigate(aboutViewModel);
 
     public void OpenShortcutsLocation()
         => Process.Start("explorer.exe", StorageLocation.Shortcuts);

@@ -1,5 +1,4 @@
 using System.Drawing;
-using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -95,7 +94,7 @@ public class StateService : IStateService
             : shortcutFactory.Construct();
         shortcut.Name = group.Name;
         shortcut.ExecutablePath = StorageLocation.ApplicationExecutable;
-        shortcut.Arguments = group.Name;
+        shortcut.Arguments = $"\"{group.Name}\"";
         shortcut.WorkingDirectory = Directory.GetCurrentDirectory();
         shortcut.IconLocation = new IconLocation(iconPath, 0);
         shortcut.Save(StorageLocation.Shortcuts);

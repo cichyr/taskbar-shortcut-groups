@@ -30,5 +30,6 @@
         </ListBox>
         <Button Content="Add new group" Command="{Binding AddNewGroup}" />
         <Button Content="Open shortcuts location" Command="{Binding OpenShortcutsLocation}" />
+        <Button Content="About TaskbarShortcutGroups" Command="{Binding OpenAboutView}" />
     </StackPanel>
 </UserControl>

@@ -3,15 +3,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
-             xmlns:converters1="clr-namespace:TaskbarShortcutGroups.Avalonia.Converters"
+             xmlns:converters="clr-namespace:TaskbarShortcutGroups.Avalonia.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TaskbarShortcutGroups.Avalonia.Views.ShortcutGroupEditorView">
     <Design.DataContext>
         <viewModels:ShortcutGroupEditorViewModel />
     </Design.DataContext>
     <UserControl.Resources>
-        <converters1:PathToBitmapConverter x:Key="PathToBitmapConverter" />
-        <converters1:SystemBitmapToAvaloniaBitmapConverter x:Key="SystemBitmapToAvaloniaBitmapConverter" />
+        <converters:PathToBitmapConverter x:Key="PathToBitmapConverter" />
+        <converters:SystemBitmapToAvaloniaBitmapConverter x:Key="SystemBitmapToAvaloniaBitmapConverter" />
     </UserControl.Resources>
     <Grid RowDefinitions="Auto,Auto,*,Auto">
         <Grid Grid.Row="0" RowDefinitions="Auto,Auto" Margin="10,20,10,0">

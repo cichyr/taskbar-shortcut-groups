@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TaskbarShortcutGroups.Avalonia.Views.AboutView">
+    <!-- Current application version: v0.1.0 -->
+    <!-- Newest application version on GitHub: v0.1.0 -->
+    <!-- GitHub -->
+    <Design.DataContext>
+        <viewModels:AboutViewModel />
+    </Design.DataContext>
+    <Grid RowDefinitions="*,70">
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding Licenses, Mode=OneTime}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Expander HorizontalAlignment="Stretch">
+                            <Expander.Header>
+                                <TextBlock Text="{Binding ComponentName}" FontWeight="Bold" />
+                            </Expander.Header>
+                            <Grid RowDefinitions="*,*,*,*">
+                                <TextBlock Grid.Row="0">
+                                    <Run FontWeight="Bold" Text="Component name: " />
+                                    <Run Text="{Binding ComponentName}" />
+                                </TextBlock>
+                                <TextBlock Grid.Row="1">
+                                    <Run FontWeight="Bold" Text="Author: " />
+                                    <Run Text="{Binding Author}" />
+                                </TextBlock>
+                                <TextBlock Grid.Row="3" Text="{Binding Text}" TextWrapping="Wrap" />
+                            </Grid>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Button Margin="20,0" Grid.Row="1" Content="Back" Command="{Binding NavigateBack}" HorizontalAlignment="Right" />
+    </Grid>
+</UserControl>
