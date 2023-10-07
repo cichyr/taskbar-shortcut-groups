@@ -2,9 +2,16 @@ namespace TaskbarShortcutGroups.Common.Models.Licensing;
 
 public class License : ILicense
 {
-    public string ComponentName { get; init; } = null!;
+    public License(string componentName, string author, string text)
+    {
+        ComponentName = componentName ?? throw new ArgumentNullException(nameof(componentName));
+        Author = author ?? throw new ArgumentNullException(nameof(author));
+        Text = text ?? throw new ArgumentNullException(nameof(text));
+    }
 
-    public string Author { get; init; } = null!;
+    public string ComponentName { get; }
 
-    public string Text { get; init; } = null!;
+    public string Author { get; }
+
+    public string Text { get; }
 }

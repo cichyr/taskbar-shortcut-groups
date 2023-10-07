@@ -19,13 +19,10 @@ public class LicenseProvider : ILicenseProvider
         foreach (var licenseFile in licenseFiles)
         {
             using var streamReader = File.OpenText(licenseFile);
-            var newLicense = new License
-            {
-                ComponentName = streamReader.ReadLine()!,
-                Author = streamReader.ReadLine()!,
-                Text = streamReader.ReadToEnd(),
-            };
-            newLicenses.Add(newLicense);
+            var componentName = streamReader.ReadLine();
+            var author = streamReader.ReadLine();
+            var text = streamReader.ReadToEnd();
+            newLicenses.Add(new License(componentName!, author!, text.Trim()));
         }
 
         licenses = newLicenses;
