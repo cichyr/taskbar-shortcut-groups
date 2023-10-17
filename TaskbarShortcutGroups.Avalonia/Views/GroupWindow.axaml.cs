@@ -15,6 +15,6 @@ public partial class GroupWindow : Window
     {
         base.Show();
         var mousePosition = Control.MousePosition;
-        Position = new PixelPoint((int)(mousePosition.X - Width / 2), (int)(mousePosition.Y - Height - 20));
+        Position = new PixelPoint((int)(mousePosition.X - Width * RenderScaling / 2), (int)(mousePosition.Y - Height * RenderScaling - 20));
     }
 }
