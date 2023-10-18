@@ -11,9 +11,14 @@
     <Design.DataContext>
         <viewModels:AboutViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="*,70">
-        <ScrollViewer>
-            <ItemsControl ItemsSource="{Binding Licenses, Mode=OneTime}">
+    <Grid RowDefinitions="Auto,*,70">
+        <StackPanel Margin="40" HorizontalAlignment="Center">
+            <TextBlock Text="Taskbar Shortcut Groups" HorizontalAlignment="Center" FontWeight="Bold" FontSize="24" />
+            <TextBlock Text="{Binding VersionString}" HorizontalAlignment="Center" />
+            <TextBlock Margin="0,10,0,0" Text="Developed by CichyR" HorizontalAlignment="Center" />
+        </StackPanel>
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl Margin="10,0" ItemsSource="{Binding Licenses, Mode=OneTime}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Expander HorizontalAlignment="Stretch">
@@ -29,13 +34,13 @@
                                     <Run FontWeight="Bold" Text="Author: " />
                                     <Run Text="{Binding Author}" />
                                 </TextBlock>
-                                <TextBlock Grid.Row="3" Text="{Binding Text}" TextWrapping="Wrap" />
+                                <TextBlock Margin="0,20,0,0" Grid.Row="3" Text="{Binding Text}" TextWrapping="Wrap" />
                             </Grid>
                         </Expander>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Button Margin="20,0" Grid.Row="1" Content="Back" Command="{Binding NavigateBack}" HorizontalAlignment="Right" />
+        <Button Margin="20,0" Grid.Row="2" Content="Back" Command="{Binding NavigateBack}" HorizontalAlignment="Right" />
     </Grid>
 </UserControl>
