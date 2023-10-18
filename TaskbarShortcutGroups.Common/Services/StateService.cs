@@ -1,18 +1,18 @@
 using System.Drawing;
 using TaskbarShortcutGroups.Common.Constants;
 using TaskbarShortcutGroups.Common.Extensions;
-using TaskbarShortcutGroups.Common.IoC;
+using TaskbarShortcutGroups.Common.IoC.Factories;
 using TaskbarShortcutGroups.Common.Models;
 
 namespace TaskbarShortcutGroups.Common.Services;
 
 public class StateService : IStateService
 {
-    private readonly IFactory<IShortcut> shortcutFactory;
-    private readonly IFactory<IShortcutGroup> shortcutGroupFactory;
+    private readonly IShortcutFactory shortcutFactory;
+    private readonly IShortcutGroupFactory shortcutGroupFactory;
     private readonly IStateStore stateStore;
 
-    public StateService(IStateStore stateStore, IFactory<IShortcutGroup> shortcutGroupFactory, IFactory<IShortcut> shortcutFactory)
+    public StateService(IStateStore stateStore, IShortcutGroupFactory shortcutGroupFactory, IShortcutFactory shortcutFactory)
     {
         this.stateStore = stateStore ?? throw new ArgumentNullException(nameof(stateStore));
         this.shortcutGroupFactory = shortcutGroupFactory ?? throw new ArgumentNullException(nameof(shortcutGroupFactory));
@@ -43,14 +43,14 @@ public class StateService : IStateService
 
     public IShortcutGroup CreateGroup()
     {
-        var newGroup = shortcutGroupFactory.Construct();
+        var newGroup = shortcutGroupFactory.Create();
         ShortcutGroups.Add(newGroup);
         return newGroup;
     }
 
     public IShortcut AddShortcutToGroup(IShortcutGroup group, string path)
     {
-        var newShortcut = shortcutFactory.Construct(path);
+        var newShortcut = shortcutFactory.Create(path);
         if (!group.Shortcuts.Add(newShortcut))
             throw new ArgumentException("Cannot add the same IShortcut twice");
         return newShortcut;
@@ -80,12 +80,12 @@ public class StateService : IStateService
         IShortcut shortcut;
         if (File.Exists(shortcutPath))
         {
-            shortcut = shortcutFactory.Construct(shortcutPath);
+            shortcut = shortcutFactory.Create(shortcutPath);
             shortcut.IconLocation = new IconLocation(iconPath, 0);
         }
         else
         {
-            shortcut = shortcutFactory.Construct();
+            shortcut = shortcutFactory.Create();
             shortcut.Name = group.Name;
             shortcut.ExecutablePath = StorageLocation.ApplicationExecutable;
             shortcut.Arguments = $"\"{group.Name}\"";

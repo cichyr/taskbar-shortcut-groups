@@ -7,16 +7,16 @@ namespace TaskbarShortcutGroups.Common.ViewModels;
 
 public class ShortcutViewModel : ViewModelBase
 {
-    private readonly Shortcut innerObject;
+    private readonly IShortcut innerObject;
 
-    public ShortcutViewModel(INavigationService navigationService, IStateService stateService, string path, ShortcutGroup parentGroup)
+    public ShortcutViewModel(INavigationService navigationService, IStateService stateService, string path, IShortcutGroup parentGroup)
         : base(navigationService, stateService)
     {
         innerObject = new Shortcut(path);
         parentGroup.Shortcuts.Add(innerObject);
     }
 
-    public ShortcutViewModel(INavigationService navigationService, IStateService stateService, Shortcut shortcut)
+    public ShortcutViewModel(INavigationService navigationService, IStateService stateService, IShortcut shortcut)
         : base(navigationService, stateService)
     {
         innerObject = shortcut;
@@ -24,7 +24,7 @@ public class ShortcutViewModel : ViewModelBase
 
     public string Name
     {
-        get => innerObject.Name ?? string.Empty;
+        get => innerObject.Name;
         set
         {
             if (innerObject.Name == value) return;
@@ -44,7 +44,7 @@ public class ShortcutViewModel : ViewModelBase
         }
     }
 
-    public Bitmap Icon => innerObject.IconBitmap;
+    public Bitmap? Icon => innerObject.IconBitmap;
 
     public void RunAndStopApplication()
     {

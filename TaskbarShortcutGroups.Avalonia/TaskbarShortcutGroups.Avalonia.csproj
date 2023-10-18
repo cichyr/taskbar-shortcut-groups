@@ -9,7 +9,7 @@
     </PropertyGroup>
     <PropertyGroup>
         <Authors>Dominik Wolny</Authors>
-        <Version>0.1.0-pre</Version>
+        <Version>0.1.0</Version>
         <PackageId>TaskbarShortcutGroups</PackageId>
         <RepositoryUrl>https://github.com/cichyr/taskbar-shortcut-groups</RepositoryUrl>
     </PropertyGroup>
@@ -28,6 +28,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
+        <PackageReference Include="DryIoc.dll" Version="5.4.2" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\TaskbarShortcutGroups.Common\TaskbarShortcutGroups.Common.csproj" />

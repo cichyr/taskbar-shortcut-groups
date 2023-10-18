@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using TaskbarShortcutGroups.Common.Constants;
-using TaskbarShortcutGroups.Common.IoC;
+using TaskbarShortcutGroups.Common.IoC.Factories;
 using TaskbarShortcutGroups.Common.Models;
 using TaskbarShortcutGroups.Common.Services;
 
@@ -11,33 +11,35 @@ namespace TaskbarShortcutGroups.Common.ViewModels;
 
 public class ShortcutGroupListViewModel : ViewModelBase
 {
-    private readonly IFactory<ShortcutGroupEditorViewModel> groupEditorFactory;
+    private readonly IShortcutGroupEditorViewModelFactory groupEditorFactory;
     private ICommand? navigateToGroup;
     private ICommand? removeGroup;
-    private AboutViewModel aboutViewModel;
+    private readonly AboutViewModel aboutViewModel;
 
-    public ShortcutGroupListViewModel(INavigationService navigationService, IStateService stateService, IFactory<ShortcutGroupEditorViewModel> groupEditorFactory, IFactory<AboutViewModel> aboutViewModelFactory)
+    public ShortcutGroupListViewModel(INavigationService navigationService, IStateService stateService, IShortcutGroupEditorViewModelFactory groupEditorFactory, AboutViewModel aboutViewModel)
         : base(navigationService, stateService)
     {
-        aboutViewModel = aboutViewModelFactory.Construct();
+        this.aboutViewModel = aboutViewModel;
         this.groupEditorFactory = groupEditorFactory;
-        ShortcutGroups = new ObservableCollection<ShortcutGroupEditorViewModel>(stateService.ShortcutGroups.Select(group => groupEditorFactory.Construct(group)));
+        ShortcutGroups = new ObservableCollection<ShortcutGroupEditorViewModel>(stateService.ShortcutGroups.Select(groupEditorFactory.Create));
     }
 
     public ObservableCollection<ShortcutGroupEditorViewModel> ShortcutGroups { get; }
 
-    public ICommand RemoveGroup => removeGroup ??= new RelayCommand<ShortcutGroupEditorViewModel>(shortcutGroup =>
-    {
-        ArgumentNullException.ThrowIfNull(shortcutGroup);
-        ShortcutGroups.Remove(shortcutGroup);
-        stateService.RemoveGroup(shortcutGroup.InnerObject);
-    });
+    public ICommand RemoveGroup => removeGroup ??= new RelayCommand<ShortcutGroupEditorViewModel>(
+        shortcutGroup =>
+        {
+            ArgumentNullException.ThrowIfNull(shortcutGroup);
+            ShortcutGroups.Remove(shortcutGroup);
+            stateService.RemoveGroup(shortcutGroup.InnerObject);
+        });
 
-    public ICommand NavigateToGroup => navigateToGroup ??= new RelayCommand<ShortcutGroupEditorViewModel>(shortcutGroup =>
-    {
-        ArgumentNullException.ThrowIfNull(shortcutGroup);
-        navigationService.Navigate(shortcutGroup);
-    });
+    public ICommand NavigateToGroup => navigateToGroup ??= new RelayCommand<ShortcutGroupEditorViewModel>(
+        shortcutGroup =>
+        {
+            ArgumentNullException.ThrowIfNull(shortcutGroup);
+            navigationService.Navigate(shortcutGroup);
+        });
 
     public void OpenShortcut(string path)
     {
@@ -53,7 +55,7 @@ public class ShortcutGroupListViewModel : ViewModelBase
 
     public void AddNewGroup()
     {
-        var shortcutGroup = groupEditorFactory.Construct();
+        var shortcutGroup = groupEditorFactory.Create();
         ShortcutGroups.Add(shortcutGroup);
         navigationService.Navigate(shortcutGroup);
     }
