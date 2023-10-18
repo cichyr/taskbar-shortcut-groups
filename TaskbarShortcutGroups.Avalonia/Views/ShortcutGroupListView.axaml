@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
              xmlns:converters1="clr-namespace:TaskbarShortcutGroups.Avalonia.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -12,24 +13,34 @@
     <UserControl.Resources>
         <converters1:PathToBitmapConverter x:Key="PathToBitmapConverter" />
     </UserControl.Resources>
-    <StackPanel>
-        <ListBox ItemsSource="{Binding ShortcutGroups}">
+    <Grid RowDefinitions="*, Auto">
+        <ListBox ItemsSource="{Binding ShortcutGroups}" Padding="0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid ColumnDefinitions="*,Auto" Width="NaN">
-                        <Button Command="{Binding $parent[ListBox].DataContext.NavigateToGroup}" CommandParameter="{Binding .}" HorizontalAlignment="Stretch" Padding="0,0">
-                            <DockPanel Width="NaN">
-                                <Image Width="50" Height="50" Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}" />
-                                <TextBlock Text="{Binding Name}" DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                            </DockPanel>
+                    <Border Padding="-16,0,-12,0">
+                        <Button Command="{Binding $parent[ListBox].DataContext.NavigateToGroup}" CommandParameter="{Binding .}" Padding="0,0" HorizontalAlignment="Stretch">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Grid Margin="20,10" ColumnDefinitions="Auto,*,Auto" Background="Transparent">
+                                        <Border Margin="0,0" ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}" >
+                                            <Image Width="50" Height="50" Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}" />
+                                        </Border>
+                                        <TextBlock FontSize="14" Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                        <Button Grid.Column="2" Command="{Binding $parent[ListBox].DataContext.RemoveGroup}" CommandParameter="{Binding}" HorizontalAlignment="Right">
+                                            <ui:SymbolIcon Symbol="Delete" FontSize="24" />
+                                        </Button>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
                         </Button>
-                        <Button Grid.Column="1" Command="{Binding $parent[ListBox].DataContext.RemoveGroup}" CommandParameter="{Binding}" HorizontalAlignment="Right" Content="Remove" />
-                    </Grid>
+                    </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Content="Add new group" Command="{Binding AddNewGroup}" />
-        <Button Content="Open shortcuts location" Command="{Binding OpenShortcutsLocation}" />
-        <Button Content="About TaskbarShortcutGroups" Command="{Binding OpenAboutView}" />
-    </StackPanel>
+        <Grid VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="20" ColumnDefinitions="*,*,*">
+            <Button Content="Add new group" Command="{Binding AddNewGroup}" />
+            <Button Grid.Column="1" HorizontalAlignment="Center" Content="Open shortcuts location" Command="{Binding OpenShortcutsLocation}" />
+            <Button Grid.Column="2" HorizontalAlignment="Right" Content="About TaskbarShortcutGroups" Command="{Binding OpenAboutView}" />
+        </Grid>
+    </Grid>
 </UserControl>
