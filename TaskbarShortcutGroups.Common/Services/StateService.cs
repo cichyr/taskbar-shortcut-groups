@@ -77,15 +77,12 @@ public class StateService : IStateService
         var shortcutPath = Path.Join(StorageLocation.Shortcuts, $"{group.Name}.lnk");
         var iconPath = Path.Join(StorageLocation.Icons, $"{group.Name}.ico");
         new Bitmap(group.IconPath).ToIcon().Save(iconPath, true).Dispose();
-        IShortcut shortcut;
-        if (File.Exists(shortcutPath))
+        var shortcutExists = File.Exists(shortcutPath);
+        using var shortcut = shortcutExists
+            ? shortcutFactory.Create(shortcutPath)
+            : shortcutFactory.Create(); 
+        if (!shortcutExists)
         {
-            shortcut = shortcutFactory.Create(shortcutPath);
-            shortcut.IconLocation = new IconLocation(iconPath, 0);
-        }
-        else
-        {
-            shortcut = shortcutFactory.Create();
             shortcut.Name = group.Name;
             shortcut.ExecutablePath = StorageLocation.ApplicationExecutable;
             shortcut.Arguments = $"\"{group.Name}\"";
@@ -93,8 +90,8 @@ public class StateService : IStateService
             shortcut.IconLocation = new IconLocation(iconPath, 0);
         }
 
+        shortcut.IconLocation = new IconLocation(iconPath, 0);
         shortcut.Save(StorageLocation.Shortcuts);
-        shortcut.Dispose();
     }
 
     public void Dispose()

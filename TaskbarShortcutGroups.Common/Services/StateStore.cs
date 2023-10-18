@@ -38,7 +38,6 @@ public class StateStore : IStateStore
         writer.Formatting = Formatting.Indented;
         serializer.Serialize(writer, shortcutGroupsDefinition);
         fileStream.Flush();
-        fileStream.Close();
     }
 
     public IEnumerable<IShortcutGroup>? Load()

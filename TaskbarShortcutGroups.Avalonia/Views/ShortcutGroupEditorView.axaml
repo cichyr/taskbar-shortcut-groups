@@ -13,7 +13,7 @@
         <converters:PathToBitmapConverter x:Key="PathToBitmapConverter" />
         <converters:SystemBitmapToAvaloniaBitmapConverter x:Key="SystemBitmapToAvaloniaBitmapConverter" />
     </UserControl.Resources>
-    <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
         <Grid Grid.Row="0" RowDefinitions="Auto,Auto" Margin="10,20,10,0">
             <Label Content="Name" FontSize="18" />
             <TextBox Grid.Row="1" Text="{Binding Name}" />
@@ -43,6 +43,7 @@
             </ScrollViewer>
             <Button Grid.Row="2" Content="Add" Command="{Binding SelectShortcut}" />
         </Grid>
-        <Button Grid.Row="3" Content="Save" Command="{Binding NavigateBack}" />
+        <Button Grid.Row="3" Content="Save" Command="{Binding SaveGroup}" />
+        <Button Grid.Row="4" Content="Back" Command="{Binding NavigateBack}" />
     </Grid>
 </UserControl>

@@ -14,6 +14,8 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
     private static readonly FileDialogFilter ShortcutFilter = new("Shortcuts", "*.lnk");
     public IShortcutGroup InnerObject { get; }
     private ICommand? removeShortcut;
+    private ICommand? saveGroup;
+    private ICommand? navigateBack;
 
     public ShortcutGroupEditorViewModel(INavigationService navigationService, IStateService stateService, IShortcutViewModelFactory shortcutFactory, IShortcutGroup shortcutGroup)
         : base(navigationService, stateService)
@@ -54,6 +56,10 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
         set => InnerObject.Name = value;
     }
 
+    public ICommand SaveGroup => saveGroup ??= new RelayCommand(() => stateService.SaveState());
+
+    public ICommand NavigateBack => navigateBack ??= new RelayCommand(() => navigationService.NavigateBack());
+
     public async Task SelectIcon()
     {
         var iconPaths = await navigationService.OpenFileDialog("Select icon", false, ImageFilter);
@@ -68,7 +74,6 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
             foreach (var path in shortcutPaths)
                 Shortcuts.Add(shortcutFactory.Create(stateService.AddShortcutToGroup(InnerObject, path)));
         OnPropertyChanged(nameof(Shortcuts));
-        stateService.SaveState();
     }
 
     public ICommand RemoveShortcut => removeShortcut ??= new RelayCommand<ShortcutViewModel>(shortcutViewModel =>

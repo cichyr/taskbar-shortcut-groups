@@ -30,7 +30,6 @@ public class SystemBitmapToAvaloniaBitmapConverter : IValueConverter
             new Vector(96, 96),
             bitmapData.Stride);
         systemBitmap.UnlockBits(bitmapData);
-        systemBitmap.Dispose();
         return avaloniaBitmap;
     }
 
