@@ -1,5 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sty="using:FluentAvalonia.Styling"
              xmlns:avalonia="clr-namespace:TaskbarShortcutGroups.Avalonia"
              x:Class="TaskbarShortcutGroups.Avalonia.App">
     <Application.DataTemplates>
@@ -7,6 +8,6 @@
     </Application.DataTemplates>
 
     <Application.Styles>
-        <FluentTheme />
+        <sty:FluentAvaloniaTheme />
     </Application.Styles>
 </Application>
