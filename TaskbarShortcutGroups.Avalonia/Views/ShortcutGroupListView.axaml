@@ -13,20 +13,30 @@
     <UserControl.Resources>
         <converters1:PathToBitmapConverter x:Key="PathToBitmapConverter" />
     </UserControl.Resources>
-    <Grid RowDefinitions="*, Auto">
+    <Grid RowDefinitions="Auto, Auto, *">
         <ListBox ItemsSource="{Binding ShortcutGroups}" Padding="0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border Padding="-16,0,-12,0">
-                        <Button Command="{Binding $parent[ListBox].DataContext.NavigateToGroup}" CommandParameter="{Binding .}" Padding="0,0" HorizontalAlignment="Stretch">
+                        <Button Command="{Binding $parent[ListBox].DataContext.NavigateToGroup}"
+                                CommandParameter="{Binding .}"
+                                HorizontalAlignment="Stretch">
                             <Button.Template>
                                 <ControlTemplate>
                                     <Grid Margin="20,10" ColumnDefinitions="Auto,*,Auto" Background="Transparent">
-                                        <Border Margin="0,0" ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}" >
-                                            <Image Width="50" Height="50" Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}" />
+                                        <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
+                                            <Image Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}"
+                                                   Width="50" Height="50" />
                                         </Border>
-                                        <TextBlock FontSize="14" Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                        <Button Grid.Column="2" Command="{Binding $parent[ListBox].DataContext.RemoveGroup}" CommandParameter="{Binding}" HorizontalAlignment="Right">
+                                        <TextBlock Grid.Column="1" FontSize="14" Text="{Binding Name}"
+                                                   VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                        <Button Grid.Column="2"
+                                                Command="{Binding $parent[ListBox].DataContext.RemoveGroup}"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                CommandParameter="{Binding}"
+                                                Width="50" Height="50"
+                                                HorizontalAlignment="Right">
                                             <ui:SymbolIcon Symbol="Delete" FontSize="24" />
                                         </Button>
                                     </Grid>
@@ -37,10 +47,28 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Grid VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="20" ColumnDefinitions="*,*,*">
-            <Button Content="Add new group" Command="{Binding AddNewGroup}" />
-            <Button Grid.Column="1" HorizontalAlignment="Center" Content="Open shortcuts location" Command="{Binding OpenShortcutsLocation}" />
-            <Button Grid.Column="2" HorizontalAlignment="Right" Content="About TaskbarShortcutGroups" Command="{Binding OpenAboutView}" />
+        <ListBoxItem Grid.Row="1">
+            <Border Padding="-16,0,-12,0">
+                <Button Command="{Binding AddNewGroup}" HorizontalAlignment="Stretch">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Grid Margin="20,10,70,10" ColumnDefinitions="Auto,*" Background="Transparent">
+                                <Border BorderBrush="{StaticResource ButtonBackgroundPointerOver}"
+                                        Width="50" Height="50" Margin="0,0"
+                                        CornerRadius="{StaticResource ControlCornerRadius}" BorderThickness="1">
+                                    <ui:SymbolIcon Symbol="Add" FontSize="24" />
+                                </Border>
+                                <TextBlock Grid.Column="1" FontSize="14" FontWeight="SemiLight" Text="Add new group" 
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Border>
+        </ListBoxItem>
+        <Grid Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="20" ColumnDefinitions="*,*">
+            <Button Content="Open shortcuts location" Command="{Binding OpenShortcutsLocation}" />
+            <Button Grid.Column="1" HorizontalAlignment="Right" Content="About Taskbar Shortcut Groups" Command="{Binding OpenAboutView}" />
         </Grid>
     </Grid>
 </UserControl>
