@@ -72,6 +72,7 @@ public class StateService : IStateService
         if (!ShortcutGroups.Remove(group))
             throw new ArgumentException("Shortcut group does not exist");
         ShortcutGroupRemoved?.Invoke(this, group);
+        SaveState();
     }
 
     public void Dispose()

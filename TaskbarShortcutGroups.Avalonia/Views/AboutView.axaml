@@ -4,13 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:CompileBindings="True" x:DataType="viewModels:AboutViewModel"
              x:Class="TaskbarShortcutGroups.Avalonia.Views.AboutView">
-    <!-- Current application version: v0.1.0 -->
-    <!-- Newest application version on GitHub: v0.1.0 -->
-    <!-- GitHub -->
-    <Design.DataContext>
-        <viewModels:AboutViewModel />
-    </Design.DataContext>
     <Grid RowDefinitions="Auto,*,70">
         <StackPanel Margin="40" HorizontalAlignment="Center">
             <TextBlock Text="Taskbar Shortcut Groups" HorizontalAlignment="Center" FontWeight="Bold" FontSize="24" />

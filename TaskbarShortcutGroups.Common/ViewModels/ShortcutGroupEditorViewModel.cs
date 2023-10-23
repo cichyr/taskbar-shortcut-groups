@@ -16,6 +16,7 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
     private ICommand? navigateBack;
     private ICommand? removeShortcut;
     private ICommand? saveGroup;
+    private ICommand? removeGroup;
 
     public ShortcutGroupEditorViewModel(INavigationService navigationService, IStateService stateService, IShortcutViewModelFactory shortcutFactory, IShortcutGroup shortcutGroup)
         : base(navigationService, stateService)
@@ -68,9 +69,11 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
     public ICommand NavigateBack => navigateBack ??= new RelayCommand(() =>
     {
         if (isNewGroup)
-            stateService.RemoveGroup(InnerObject);
+            RemoveGroup.Execute(null);
         navigationService.NavigateBack();
     });
+
+    public ICommand RemoveGroup => removeGroup ??= new RelayCommand(() => stateService.RemoveGroup(InnerObject));
 
     public ICommand RemoveShortcut => removeShortcut ??= new RelayCommand<ShortcutViewModel>(shortcutViewModel =>
     {

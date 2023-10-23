@@ -6,10 +6,8 @@
              xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
              xmlns:converters="clr-namespace:TaskbarShortcutGroups.Avalonia.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:CompileBindings="True" x:DataType="viewModels:ShortcutGroupEditorViewModel"
              x:Class="TaskbarShortcutGroups.Avalonia.Views.ShortcutGroupEditorView">
-    <Design.DataContext>
-        <viewModels:ShortcutGroupEditorViewModel />
-    </Design.DataContext>
     <UserControl.Resources>
         <converters:PathToBitmapConverter x:Key="PathToBitmapConverter" />
         <converters:SystemBitmapToAvaloniaBitmapConverter x:Key="SystemBitmapToAvaloniaBitmapConverter" />
@@ -42,7 +40,7 @@
                                 <TextBlock Margin="10,0,0,0" Text="{Binding Name}" ToolTip.Tip="{Binding Path}"
                                            VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <Button DockPanel.Dock="Right"
-                                        Command="{Binding $parent[ItemsControl].DataContext.RemoveShortcut}"
+                                        Command="{Binding $parent[ItemsControl].((viewModels:ShortcutGroupEditorViewModel)DataContext).RemoveShortcut}"
                                         CommandParameter="{Binding}"
                                         Width="40" Height="40"
                                         HorizontalAlignment="Right">

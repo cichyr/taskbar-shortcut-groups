@@ -5,10 +5,8 @@
              xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
              xmlns:converters="clr-namespace:TaskbarShortcutGroups.Avalonia.Converters"
              mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="100"
+             x:CompileBindings="True" x:DataType="viewModels:ShortcutGroupViewModel"
              x:Class="TaskbarShortcutGroups.Avalonia.Views.ShortcutGroupView">
-    <Design.DataContext>
-        <viewModels:ShortcutGroupViewModel />
-    </Design.DataContext>
     <UserControl.Resources>
         <converters:SystemBitmapToAvaloniaBitmapConverter x:Key="SystemBitmapToAvaloniaBitmapConverter" />
     </UserControl.Resources>
