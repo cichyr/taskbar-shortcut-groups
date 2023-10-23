@@ -16,10 +16,10 @@ namespace TaskbarShortcutGroups.Avalonia;
 
 public class App : Application
 {
+    private static IContainer IoCContainer { get; } = new Container();
+
     public override void Initialize()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+        => AvaloniaXamlLoader.Load(this);
 
     public override void OnFrameworkInitializationCompleted()
     {
@@ -27,37 +27,46 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
+    private static void PerformExtendedIoCSetup()
+    {
+        IoCContainer.RegisterMany<NavigationService>(Reuse.Singleton);
+        IoCContainer.Register<IVersionProvider, VersionProvider>(Reuse.Singleton);
+        IoCContainer.Register<IDialogService, DialogService>(Reuse.Singleton);
+        IoCContainer.Register<ILicenseProvider, LicenseProvider>(Reuse.Singleton);
+        IoCContainer.Register<IStateService, StateService>(Reuse.Singleton);
+        IoCContainer.Register<AboutViewModel>(Reuse.Singleton);
+        IoCContainer.Register<ShortcutGroupListViewModel>(Reuse.Singleton);
+        IoCContainer.Register<IShortcutGroupEditorViewModelFactory, ShortcutGroupEditorViewModelFactory>(Reuse.Singleton);
+        IoCContainer.Register<IShortcutFactory, ShortcutFactory>(Reuse.Singleton);
+        IoCContainer.Register<IShortcutGroupFactory, ShortcutGroupFactory>(Reuse.Singleton);
+    }
+
+    private static void PerformBasicIoCSetup()
+    {
+        IoCContainer.Register<IStateStore, StateStore>(Reuse.Singleton);
+        IoCContainer.Register<IStateProvider, StateProvider>(Reuse.Singleton);
+        IoCContainer.Register<IShortcutViewModelFactory, ShortcutViewModelFactory>(Reuse.Singleton);
+        IoCContainer.Register<ShortcutGroupViewModel>(Reuse.Singleton);
+    }
+
     private static void SetupMainWindow(IApplicationLifetime? lifetime)
     {
-        var container = new Container();
-        container.RegisterMany<NavigationService>(Reuse.Singleton);
-        container.Register<IVersionProvider, VersionProvider>(Reuse.Singleton);
-        container.Register<IDialogService, DialogService>(Reuse.Singleton);
-        container.Register<ILicenseProvider, LicenseProvider>(Reuse.Singleton);
-        container.Register<IStateStore, StateStore>(Reuse.Singleton);
-        container.Register<IStateService, StateService>(Reuse.Singleton);
-        container.Register<AboutViewModel>(Reuse.Singleton);
-        container.Register<ShortcutGroupViewModel>(Reuse.Singleton);
-        container.Register<ShortcutGroupListViewModel>(Reuse.Singleton);
-        container.Register<IShortcutViewModelFactory, ShortcutViewModelFactory>(Reuse.Singleton);
-        container.Register<IShortcutGroupEditorViewModelFactory, ShortcutGroupEditorViewModelFactory>(Reuse.Singleton);
-        container.Register<IShortcutFactory, ShortcutFactory>(Reuse.Singleton);
-        container.Register<IShortcutGroupFactory, ShortcutGroupFactory>(Reuse.Singleton);
+        PerformBasicIoCSetup();
 
-        var navigationService = container.Resolve<IAvaloniaNavigationService>();
         switch (lifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
-                desktop.Exit += (_, _) => container.Dispose();
+                desktop.Exit += (_, _) => IoCContainer.Dispose();
                 if (desktop.Args != null && desktop.Args.Any())
                 {
-                    var stateService = container.Resolve<IStateService>();
-                    var shortcutGroup = stateService.ShortcutGroups.FirstOrDefault(sg => sg.Name == desktop.Args[0]);
+                    var stateProvider = IoCContainer.Resolve<IStateProvider>();
+                    var shortcutGroup = stateProvider.ShortcutGroups.FirstOrDefault(sg => sg.Name == desktop.Args[0]);
                     if (shortcutGroup is not null)
                     {
-                        var groupViewModelFactory = container.Resolve<Func<IShortcutGroup, ShortcutGroupViewModel>>();
+                        var groupViewModelFactory = IoCContainer.Resolve<Func<IShortcutGroup, ShortcutGroupViewModel>>();
                         var groupViewModel = groupViewModelFactory(shortcutGroup);
-                        desktop.MainWindow = new GroupWindow { DataContext = navigationService };
+                        desktop.MainWindow = new GroupWindow {DataContext = groupViewModel};
+                        desktop.MainWindow.Content = groupViewModel;
 #if !DEBUG
                         desktop.MainWindow.LostFocus += (_,_) =>
                         {
@@ -67,13 +76,13 @@ public class App : Application
 #endif
                         desktop.MainWindow.Focusable = true;
                         desktop.MainWindow.Focus();
-                        navigationService.Setup(desktop.MainWindow);
-                        navigationService.Navigate(groupViewModel);
                         return;
                     }
                 }
 
-                var groupListViewModel = container.Resolve<ShortcutGroupListViewModel>();
+                PerformExtendedIoCSetup();
+                var navigationService = IoCContainer.Resolve<IAvaloniaNavigationService>();
+                var groupListViewModel = IoCContainer.Resolve<ShortcutGroupListViewModel>();
                 desktop.MainWindow = new MainWindow();
                 navigationService.Setup(desktop.MainWindow);
                 navigationService.Navigate(groupListViewModel);

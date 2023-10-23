@@ -8,13 +8,13 @@ namespace TaskbarShortcutGroups.Avalonia;
 
 public class ViewLocator : IDataTemplate
 {
-    private static string viewsNamespace = typeof(ViewLocator).FullName!.Replace(nameof(ViewLocator), "Views");
+    private static readonly string ViewsNamespace = typeof(ViewLocator).FullName!.Replace(nameof(ViewLocator), "Views");
 
     public Control Build(object? data)
     {
         ArgumentNullException.ThrowIfNull(data);
         var name = data.GetType().FullName!.Split("ViewModels").Last().Replace("ViewModel", "View");
-        var fullyQualifiedViewName = $"{viewsNamespace}{name}";
+        var fullyQualifiedViewName = $"{ViewsNamespace}{name}";
         var type = Type.GetType(fullyQualifiedViewName);
         return type != null
             ? (Control)Activator.CreateInstance(type)!
