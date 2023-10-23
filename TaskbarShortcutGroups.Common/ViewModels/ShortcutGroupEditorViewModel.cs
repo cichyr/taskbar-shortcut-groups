@@ -9,13 +9,13 @@ namespace TaskbarShortcutGroups.Common.ViewModels;
 
 public class ShortcutGroupEditorViewModel : ViewModelBase
 {
-    private readonly IShortcutViewModelFactory shortcutFactory;
     private static readonly FileDialogFilter ImageFilter = new("Images", "*.jpg", "*.png", "*.ico");
     private static readonly FileDialogFilter ShortcutFilter = new("Shortcuts", "*.lnk");
-    public IShortcutGroup InnerObject { get; }
+    private readonly IShortcutViewModelFactory shortcutFactory;
+    private bool isNewGroup;
+    private ICommand? navigateBack;
     private ICommand? removeShortcut;
     private ICommand? saveGroup;
-    private ICommand? navigateBack;
 
     public ShortcutGroupEditorViewModel(INavigationService navigationService, IStateService stateService, IShortcutViewModelFactory shortcutFactory, IShortcutGroup shortcutGroup)
         : base(navigationService, stateService)
@@ -32,11 +32,14 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
     {
         this.shortcutFactory = shortcutFactory;
         InnerObject = new ShortcutGroup();
+        isNewGroup = true;
         TitleNamePrefix = "Create new shortcut group";
         Shortcuts = new ObservableCollection<ShortcutViewModel>(
             InnerObject.Shortcuts.Select(shortcutFactory.Create));
         stateService.ShortcutGroups.Add(InnerObject);
     }
+
+    public IShortcutGroup InnerObject { get; }
 
     public string IconPath
     {
@@ -56,9 +59,27 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
         set => InnerObject.Name = value;
     }
 
-    public ICommand SaveGroup => saveGroup ??= new RelayCommand(() => stateService.SaveState());
+    public ICommand SaveGroup => saveGroup ??= new RelayCommand(() =>
+    {
+        isNewGroup = false;
+        stateService.SaveState();
+    });
 
-    public ICommand NavigateBack => navigateBack ??= new RelayCommand(() => navigationService.NavigateBack());
+    public ICommand NavigateBack => navigateBack ??= new RelayCommand(() =>
+    {
+        if (isNewGroup)
+            stateService.RemoveGroup(InnerObject);
+        navigationService.NavigateBack();
+    });
+
+    public ICommand RemoveShortcut => removeShortcut ??= new RelayCommand<ShortcutViewModel>(shortcutViewModel =>
+    {
+        ArgumentNullException.ThrowIfNull(shortcutViewModel);
+        var shortcut = InnerObject.Shortcuts.First(x => x.ExecutablePath == shortcutViewModel.Path);
+        Shortcuts.Remove(shortcutViewModel);
+        stateService.RemoveShortcutFromGroup(InnerObject, shortcut);
+        OnPropertyChanged(nameof(Shortcuts));
+    });
 
     public async Task SelectIcon()
     {
@@ -75,13 +96,4 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
                 Shortcuts.Add(shortcutFactory.Create(stateService.AddShortcutToGroup(InnerObject, path)));
         OnPropertyChanged(nameof(Shortcuts));
     }
-
-    public ICommand RemoveShortcut => removeShortcut ??= new RelayCommand<ShortcutViewModel>(shortcutViewModel =>
-    {
-        ArgumentNullException.ThrowIfNull(shortcutViewModel);
-        var shortcut = InnerObject.Shortcuts.First(x => x.ExecutablePath == shortcutViewModel.Path);
-        Shortcuts.Remove(shortcutViewModel);
-        stateService.RemoveShortcutFromGroup(InnerObject, shortcut);
-        OnPropertyChanged(nameof(Shortcuts));
-    });
 }

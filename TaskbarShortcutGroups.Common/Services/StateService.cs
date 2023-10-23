@@ -24,6 +24,7 @@ public class StateService : IStateService
         LoadState();
     }
 
+    public event EventHandler<IShortcutGroup>? ShortcutGroupRemoved;
     public List<IShortcutGroup> ShortcutGroups { get; private set; }
 
     public void SaveState()
@@ -70,6 +71,13 @@ public class StateService : IStateService
         ArgumentNullException.ThrowIfNull(group);
         if (!ShortcutGroups.Remove(group))
             throw new ArgumentException("Shortcut group does not exist");
+        ShortcutGroupRemoved?.Invoke(this, group);
+    }
+
+    public void Dispose()
+    {
+        ShortcutGroups.ForEach(x => x.Dispose());
+        GC.SuppressFinalize(this);
     }
 
     private void CreateOrUpdateShortcutForGroup(IShortcutGroup group)
@@ -80,7 +88,7 @@ public class StateService : IStateService
         var shortcutExists = File.Exists(shortcutPath);
         using var shortcut = shortcutExists
             ? shortcutFactory.Create(shortcutPath)
-            : shortcutFactory.Create(); 
+            : shortcutFactory.Create();
         if (!shortcutExists)
         {
             shortcut.Name = group.Name;
@@ -92,11 +100,5 @@ public class StateService : IStateService
 
         shortcut.IconLocation = new IconLocation(iconPath, 0);
         shortcut.Save(StorageLocation.Shortcuts);
-    }
-
-    public void Dispose()
-    {
-        ShortcutGroups.ForEach(x => x.Dispose());
-        GC.SuppressFinalize(this);
     }
 }

@@ -17,39 +17,27 @@ internal class NavigationService : IAvaloniaNavigationService
     {
         dialogService = new DialogService(this);
     }
-    
-    private Stack<object> NavigationStack { get; } = new();
-    public Window CurrentWindow { get; private set; } = null!;
 
-    public void Navigate<TViewModel>(params object[] parameters) where TViewModel : ViewModelBase
-    {
-        var viewModel = CreateViewModelInstance<TViewModel>(parameters);
-        UpdateWindowTitle(viewModel);
-        NavigationStack.Push(CurrentWindow.Content!);
-        CurrentWindow.Content = viewModel;
-    }
+    private Stack<ViewModelBase> NavigationStack { get; } = new();
+    public Window CurrentWindow { get; private set; } = null!;
 
     public void Navigate<TViewModel>(TViewModel viewModel) where TViewModel : ViewModelBase
     {
         UpdateWindowTitle(viewModel);
-        NavigationStack.Push(CurrentWindow.Content!);
+        NavigationStack.Push((ViewModelBase)CurrentWindow.Content!);
         CurrentWindow.Content = viewModel;
     }
 
-    private void UpdateWindowTitle(ViewModelBase viewModel)
-        => CurrentWindow.Title = string.IsNullOrEmpty(viewModel.TitleNamePrefix)
-            ? baseTitle
-            : $"{viewModel.TitleNamePrefix} - {baseTitle}";
-
     public void NavigateBack()
     {
-        var previousView = NavigationStack.Pop();
-        if (previousView is ViewModelBase viewModel && !string.IsNullOrEmpty(viewModel.TitleNamePrefix))
-            CurrentWindow.Title = $"{viewModel.TitleNamePrefix} - {baseTitle}";
-        CurrentWindow.Content = previousView;
+        var previousViewModel = NavigationStack.Pop();
+        CurrentWindow.Title = !string.IsNullOrEmpty(previousViewModel.TitleNamePrefix)
+            ? $"{previousViewModel.TitleNamePrefix} - {baseTitle}"
+            : baseTitle;
+        CurrentWindow.Content = previousViewModel;
     }
 
-    public Task<string[]?> OpenFileDialog(string title, bool allowMultipleFiles, params FileDialogFilter[] filters) 
+    public Task<string[]?> OpenFileDialog(string title, bool allowMultipleFiles, params FileDialogFilter[] filters)
         => dialogService.OpenFileDialog(title, allowMultipleFiles, filters);
 
     public void Setup(Window window)
@@ -58,9 +46,20 @@ internal class NavigationService : IAvaloniaNavigationService
         baseTitle = window.Title!;
     }
 
-    private static ViewModelBase CreateViewModelInstance<TViewModel>(object[] parameters)
+    public void Navigate<TViewModel>(params object[] parameters) where TViewModel : ViewModelBase
     {
-        return Activator.CreateInstance(typeof(TViewModel), parameters) as ViewModelBase ??
-               throw new InvalidOperationException("Failed to create view model.");
+        var viewModel = CreateViewModelInstance<TViewModel>(parameters);
+        UpdateWindowTitle(viewModel);
+        NavigationStack.Push((ViewModelBase)CurrentWindow.Content!);
+        CurrentWindow.Content = viewModel;
     }
+
+    private void UpdateWindowTitle(ViewModelBase viewModel)
+        => CurrentWindow.Title = string.IsNullOrEmpty(viewModel.TitleNamePrefix)
+            ? baseTitle
+            : $"{viewModel.TitleNamePrefix} - {baseTitle}";
+
+    private static ViewModelBase CreateViewModelInstance<TViewModel>(object[] parameters)
+        => Activator.CreateInstance(typeof(TViewModel), parameters) as ViewModelBase ??
+           throw new InvalidOperationException("Failed to create view model.");
 }

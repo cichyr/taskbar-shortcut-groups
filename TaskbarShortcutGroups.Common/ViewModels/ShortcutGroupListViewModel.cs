@@ -11,10 +11,10 @@ namespace TaskbarShortcutGroups.Common.ViewModels;
 
 public class ShortcutGroupListViewModel : ViewModelBase
 {
+    private readonly AboutViewModel aboutViewModel;
     private readonly IShortcutGroupEditorViewModelFactory groupEditorFactory;
     private ICommand? navigateToGroup;
     private ICommand? removeGroup;
-    private readonly AboutViewModel aboutViewModel;
 
     public ShortcutGroupListViewModel(INavigationService navigationService, IStateService stateService, IShortcutGroupEditorViewModelFactory groupEditorFactory, AboutViewModel aboutViewModel)
         : base(navigationService, stateService)
@@ -22,6 +22,7 @@ public class ShortcutGroupListViewModel : ViewModelBase
         this.aboutViewModel = aboutViewModel;
         this.groupEditorFactory = groupEditorFactory;
         ShortcutGroups = new ObservableCollection<ShortcutGroupEditorViewModel>(stateService.ShortcutGroups.Select(groupEditorFactory.Create));
+        this.stateService.ShortcutGroupRemoved += HandleShortcutGroupRemoved;
     }
 
     public ObservableCollection<ShortcutGroupEditorViewModel> ShortcutGroups { get; }
@@ -40,6 +41,12 @@ public class ShortcutGroupListViewModel : ViewModelBase
             ArgumentNullException.ThrowIfNull(shortcutGroup);
             navigationService.Navigate(shortcutGroup);
         });
+
+    private void HandleShortcutGroupRemoved(object? sender, IShortcutGroup removedShortcutGroup)
+    {
+        var viewModelToRemove = ShortcutGroups.First(x => x.InnerObject == removedShortcutGroup);
+        ShortcutGroups.Remove(viewModelToRemove);
+    }
 
     public void OpenShortcut(string path)
     {

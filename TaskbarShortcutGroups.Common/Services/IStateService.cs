@@ -5,6 +5,7 @@ namespace TaskbarShortcutGroups.Common.Services;
 public interface IStateService : IDisposable
 {
     List<IShortcutGroup> ShortcutGroups { get; }
+    event EventHandler<IShortcutGroup> ShortcutGroupRemoved;
     void SaveState();
     void LoadState();
     IShortcutGroup CreateGroup();
