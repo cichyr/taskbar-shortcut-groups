@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
              xmlns:converters="clr-namespace:TaskbarShortcutGroups.Avalonia.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -13,37 +14,69 @@
         <converters:PathToBitmapConverter x:Key="PathToBitmapConverter" />
         <converters:SystemBitmapToAvaloniaBitmapConverter x:Key="SystemBitmapToAvaloniaBitmapConverter" />
     </UserControl.Resources>
-    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
-        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" Margin="10,20,10,0">
-            <Label Content="Name" FontSize="18" />
-            <TextBox Grid.Row="1" Text="{Binding Name}" />
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto">
+        <TextBlock Classes="Header" Text="Name" Margin="10,20,10,0" />
+        <TextBox Margin="20,10,20,0" Grid.Row="1" Text="{Binding Name}" />
+
+        <TextBlock Grid.Row="2" Margin="10,20,10,0" Classes="Header" Text="Icon" />
+        <Grid Margin="20,10,10,0" Grid.Row="3" ColumnDefinitions="Auto,*">
+            <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
+                <Image Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}"
+                       Width="75" Height="75" DockPanel.Dock="Left" />
+            </Border>
+            <StackPanel Margin="10,0,0,0" Grid.Column="1" VerticalAlignment="Stretch">
+                <TextBox Margin="0,0,10,0" Text="{Binding IconPath}" DockPanel.Dock="Top" />
+                <Button Margin="0,10,0,0" Content="Browse..." Command="{Binding SelectIcon}" />
+            </StackPanel>
         </Grid>
-        <Grid Grid.Row="1" RowDefinitions="Auto,Auto" Margin="10,20,10,0">
-            <Label Content="Icon" FontSize="18" />
-            <DockPanel Grid.Row="1">
-                <Image Width="75" Height="75" Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}" DockPanel.Dock="Left" />
-                <TextBox Text="{Binding IconPath}" DockPanel.Dock="Top" />
-                <Button Content="Browse..." Command="{Binding SelectIcon}" DockPanel.Dock="Bottom" />
-            </DockPanel>
-        </Grid>
-        <Grid Grid.Row="2" RowDefinitions="Auto,*,Auto" Margin="10,20,10,0">
-            <Label Content="Shortcuts" FontSize="18" />
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
+
+        <TextBlock Grid.Row="4" Margin="10,20,0,0" Classes="Header" Text="Shortcuts" />
+        <ScrollViewer Margin="10,10,0,0" Grid.Row="5" VerticalScrollBarVisibility="Auto">
+            <Grid RowDefinitions="Auto,Auto" Margin="0,0,20,0">
                 <ItemsControl ItemsSource="{Binding Shortcuts}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <DockPanel Width="NaN" Margin="10,20,10,0" ToolTip.Tip="{Binding Path}">
-                                <Image Width="40" Height="40" Source="{Binding Icon, Converter={StaticResource SystemBitmapToAvaloniaBitmapConverter}}" DockPanel.Dock="Left" />
-                                <TextBlock Margin="10,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <Button Margin="10,0,0,0" Content="Remove" Command="{Binding $parent[ItemsControl].DataContext.RemoveShortcut}" CommandParameter="{Binding .}" HorizontalAlignment="Right" DockPanel.Dock="Right" />
+                            <DockPanel Width="NaN" Margin="10,20,0,0">
+                                <Image Source="{Binding Icon, Converter={StaticResource SystemBitmapToAvaloniaBitmapConverter}}"
+                                       Margin="3,0,0,0" Width="40" Height="40" DockPanel.Dock="Left" />
+                                <TextBlock Margin="10,0,0,0" Text="{Binding Name}" ToolTip.Tip="{Binding Path}"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <Button DockPanel.Dock="Right"
+                                        Command="{Binding $parent[ItemsControl].DataContext.RemoveShortcut}"
+                                        CommandParameter="{Binding}"
+                                        Width="40" Height="40"
+                                        HorizontalAlignment="Right">
+                                    <ui:SymbolIcon Symbol="Delete" FontSize="24" />
+                                </Button>
                             </DockPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </ScrollViewer>
-            <Button Grid.Row="2" Content="Add" Command="{Binding SelectShortcut}" />
+                <ListBoxItem Margin="0,10,0,0" Grid.Row="1">
+                    <Border Padding="-16,0,-12,0">
+                        <Button Command="{Binding SelectShortcut}" HorizontalAlignment="Stretch">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Grid Margin="10,10,0,10" ColumnDefinitions="Auto,*" Background="Transparent">
+                                        <Border BorderBrush="{StaticResource ButtonBackgroundPointerOver}"
+                                                Width="40" Height="40"
+                                                CornerRadius="{StaticResource ControlCornerRadius}" BorderThickness="1">
+                                            <ui:SymbolIcon Symbol="Add" FontSize="20" />
+                                        </Border>
+                                        <TextBlock Grid.Column="1" Margin="10,0,0,0" Text="Add new shortcut"
+                                                   VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Border>
+                </ListBoxItem>
+            </Grid>
+        </ScrollViewer>
+        
+        <Grid Grid.Row="6" Margin="20" ColumnDefinitions="*, Auto">
+            <Button Content="Back" Command="{Binding NavigateBack}" HorizontalAlignment="Right" />
+            <Button Grid.Column="1" Margin="20,0,0,0" Content="Save" Command="{Binding SaveGroup}" />
         </Grid>
-        <Button Grid.Row="3" Content="Save" Command="{Binding SaveGroup}" />
-        <Button Grid.Row="4" Content="Back" Command="{Binding NavigateBack}" />
     </Grid>
 </UserControl>

@@ -9,5 +9,13 @@
 
     <Application.Styles>
         <sty:FluentAvaloniaTheme UseSystemFontOnWindows="True" />
+        <Style Selector="TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiLight" />
+        </Style>
+        <Style Selector="TextBlock.Header">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="Normal" />
+        </Style>
     </Application.Styles>
 </Application>

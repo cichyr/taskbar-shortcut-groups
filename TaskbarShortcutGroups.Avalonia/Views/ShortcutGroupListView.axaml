@@ -4,14 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
-             xmlns:converters1="clr-namespace:TaskbarShortcutGroups.Avalonia.Converters"
+             xmlns:converters="clr-namespace:TaskbarShortcutGroups.Avalonia.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TaskbarShortcutGroups.Avalonia.Views.ShortcutGroupListView">
     <Design.DataContext>
         <viewModels:ShortcutGroupListViewModel />
     </Design.DataContext>
     <UserControl.Resources>
-        <converters1:PathToBitmapConverter x:Key="PathToBitmapConverter" />
+        <converters:PathToBitmapConverter x:Key="PathToBitmapConverter" />
     </UserControl.Resources>
     <Grid RowDefinitions="Auto, Auto, *">
         <ListBox ItemsSource="{Binding ShortcutGroups}" Padding="0,0">
@@ -19,7 +19,7 @@
                 <DataTemplate>
                     <Border Padding="-16,0,-12,0">
                         <Button Command="{Binding $parent[ListBox].DataContext.NavigateToGroup}"
-                                CommandParameter="{Binding .}"
+                                CommandParameter="{Binding}"
                                 HorizontalAlignment="Stretch">
                             <Button.Template>
                                 <ControlTemplate>
@@ -28,13 +28,13 @@
                                             <Image Source="{Binding IconPath, Converter={StaticResource PathToBitmapConverter}}"
                                                    Width="50" Height="50" />
                                         </Border>
-                                        <TextBlock Grid.Column="1" FontSize="14" Text="{Binding Name}"
+                                        <TextBlock Grid.Column="1" Text="{Binding Name}"
                                                    VerticalAlignment="Center" HorizontalAlignment="Center" />
                                         <Button Grid.Column="2"
                                                 Command="{Binding $parent[ListBox].DataContext.RemoveGroup}"
+                                                CommandParameter="{Binding}"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CommandParameter="{Binding}"
                                                 Width="50" Height="50"
                                                 HorizontalAlignment="Right">
                                             <ui:SymbolIcon Symbol="Delete" FontSize="24" />
@@ -58,7 +58,7 @@
                                         CornerRadius="{StaticResource ControlCornerRadius}" BorderThickness="1">
                                     <ui:SymbolIcon Symbol="Add" FontSize="24" />
                                 </Border>
-                                <TextBlock Grid.Column="1" FontSize="14" FontWeight="SemiLight" Text="Add new group" 
+                                <TextBlock Grid.Column="1" Text="Add new shortcut group" 
                                            VerticalAlignment="Center" HorizontalAlignment="Center" />
                             </Grid>
                         </ControlTemplate>
