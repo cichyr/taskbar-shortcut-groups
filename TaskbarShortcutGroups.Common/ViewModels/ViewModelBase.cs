@@ -20,7 +20,4 @@ public abstract class ViewModelBase : ObservableObject
         get => titleNamePrefix;
         protected init => SetProperty(ref titleNamePrefix, value);
     }
-
-    public void NavigateBack()
-        => navigationService.NavigateBack();
 }

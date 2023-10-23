@@ -21,7 +21,7 @@ public class Shortcut : IShortcut
     public Shortcut(string path)
     {
         Location = path ?? throw new ArgumentNullException(nameof(path));
-        Name = Path.GetFileName(path);
+        Name = Path.GetFileNameWithoutExtension(path);
     }
 
     /// <summary>

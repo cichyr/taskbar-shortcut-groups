@@ -21,6 +21,6 @@ public class AboutViewModel : ViewModelBase
 
     public string VersionString => $"v{versionProvider.ProductVersion}";
 
-    public void Return()
+    public void NavigateBack()
         => navigationService.NavigateBack();
 }
