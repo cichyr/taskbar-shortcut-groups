@@ -11,32 +11,34 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
 {
     private static readonly FileDialogFilter ImageFilter = new("Images", "*.jpg", "*.png", "*.ico");
     private static readonly FileDialogFilter ShortcutFilter = new("Shortcuts", "*.lnk");
+    private readonly INavigationService navigationService;
     private readonly IShortcutViewModelFactory shortcutFactory;
+    private readonly IStateService stateService;
     private bool isNewGroup;
     private ICommand? navigateBack;
+    private ICommand? removeGroup;
     private ICommand? removeShortcut;
     private ICommand? saveGroup;
-    private ICommand? removeGroup;
 
     public ShortcutGroupEditorViewModel(INavigationService navigationService, IStateService stateService, IShortcutViewModelFactory shortcutFactory, IShortcutGroup shortcutGroup)
-        : base(navigationService, stateService)
     {
+        this.navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+        this.stateService = stateService ?? throw new ArgumentNullException(nameof(stateService));
+        this.shortcutFactory = shortcutFactory ?? throw new ArgumentNullException(nameof(shortcutFactory));
+        InnerObject = shortcutGroup ?? throw new ArgumentNullException(nameof(shortcutGroup));
         TitleNamePrefix = shortcutGroup.Name;
-        this.shortcutFactory = shortcutFactory;
-        InnerObject = shortcutGroup;
-        Shortcuts = new ObservableCollection<ShortcutViewModel>(
-            shortcutGroup.Shortcuts.Select(shortcutFactory.Create));
+        Shortcuts = new ObservableCollection<ShortcutViewModel>(shortcutGroup.Shortcuts.Select(shortcutFactory.Create));
     }
 
     public ShortcutGroupEditorViewModel(INavigationService navigationService, IStateService stateService, IShortcutViewModelFactory shortcutFactory)
-        : base(navigationService, stateService)
     {
-        this.shortcutFactory = shortcutFactory;
+        this.navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+        this.stateService = stateService ?? throw new ArgumentNullException(nameof(stateService));
+        this.shortcutFactory = shortcutFactory ?? throw new ArgumentNullException(nameof(shortcutFactory));
         InnerObject = new ShortcutGroup();
         isNewGroup = true;
         TitleNamePrefix = "Create new shortcut group";
-        Shortcuts = new ObservableCollection<ShortcutViewModel>(
-            InnerObject.Shortcuts.Select(shortcutFactory.Create));
+        Shortcuts = new ObservableCollection<ShortcutViewModel>();
         stateService.ShortcutGroups.Add(InnerObject);
     }
 
@@ -93,7 +95,7 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
 
     public async Task SelectShortcut()
     {
-        var shortcutPaths = await navigationService.OpenFileDialog("Select shortcut", false, ShortcutFilter);
+        var shortcutPaths = await navigationService.OpenFileDialog("Select shortcut", true, ShortcutFilter);
         if (shortcutPaths != null && shortcutPaths.Any())
             foreach (var path in shortcutPaths)
                 Shortcuts.Add(shortcutFactory.Create(stateService.AddShortcutToGroup(InnerObject, path)));

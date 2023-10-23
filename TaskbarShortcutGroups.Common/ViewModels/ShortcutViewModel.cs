@@ -1,23 +1,21 @@
 using System.Diagnostics;
 using System.Drawing;
+using CommunityToolkit.Mvvm.ComponentModel;
 using TaskbarShortcutGroups.Common.Models;
-using TaskbarShortcutGroups.Common.Services;
 
 namespace TaskbarShortcutGroups.Common.ViewModels;
 
-public class ShortcutViewModel : ViewModelBase
+public class ShortcutViewModel : ObservableObject
 {
     private readonly IShortcut innerObject;
 
-    public ShortcutViewModel(INavigationService navigationService, IStateService stateService, string path, IShortcutGroup parentGroup)
-        : base(navigationService, stateService)
+    public ShortcutViewModel(string path, IShortcutGroup parentGroup)
     {
         innerObject = new Shortcut(path);
         parentGroup.Shortcuts.Add(innerObject);
     }
 
-    public ShortcutViewModel(INavigationService navigationService, IStateService stateService, IShortcut shortcut)
-        : base(navigationService, stateService)
+    public ShortcutViewModel(IShortcut shortcut)
     {
         innerObject = shortcut;
     }

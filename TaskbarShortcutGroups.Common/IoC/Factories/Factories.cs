@@ -6,24 +6,16 @@ namespace TaskbarShortcutGroups.Common.IoC.Factories;
 
 public interface IShortcutViewModelFactory
 {
+    ShortcutViewModel Create(string path, IShortcutGroup parentGroup);
     ShortcutViewModel Create(IShortcut shortcut);
 }
 
 public class ShortcutViewModelFactory : IShortcutViewModelFactory
 {
-    private readonly INavigationService navigationService;
-    private readonly IStateService stateService;
-
-    public ShortcutViewModelFactory(INavigationService navigationService, IStateService stateService)
-    {
-        this.navigationService = navigationService;
-        this.stateService = stateService;
-    }
-
+    public ShortcutViewModel Create(string path, IShortcutGroup parentGroup)
+        => new(path, parentGroup);
     public ShortcutViewModel Create(IShortcut shortcut)
-    {
-        return new ShortcutViewModel(navigationService, stateService, shortcut);
-    }
+        => new(shortcut);
 }
 
 public interface IShortcutGroupEditorViewModelFactory
