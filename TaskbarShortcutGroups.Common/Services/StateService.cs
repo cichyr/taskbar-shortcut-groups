@@ -3,6 +3,7 @@ using TaskbarShortcutGroups.Common.Constants;
 using TaskbarShortcutGroups.Common.Extensions;
 using TaskbarShortcutGroups.Common.IoC.Factories;
 using TaskbarShortcutGroups.Common.Models;
+using TaskbarShortcutGroups.Common.Providers;
 
 namespace TaskbarShortcutGroups.Common.Services;
 
@@ -10,26 +11,21 @@ public class StateService : IStateService
 {
     private readonly IShortcutFactory shortcutFactory;
     private readonly IShortcutGroupFactory shortcutGroupFactory;
-    private readonly IStateStore stateStore;
+    private readonly IStateProvider stateProvider;
 
-    public StateService(IStateStore stateStore, IShortcutGroupFactory shortcutGroupFactory, IShortcutFactory shortcutFactory)
+    public StateService(IStateProvider stateProvider, IShortcutGroupFactory shortcutGroupFactory, IShortcutFactory shortcutFactory)
     {
-        this.stateStore = stateStore ?? throw new ArgumentNullException(nameof(stateStore));
+        this.stateProvider = stateProvider ?? throw new ArgumentNullException(nameof(stateProvider));
         this.shortcutGroupFactory = shortcutGroupFactory ?? throw new ArgumentNullException(nameof(shortcutGroupFactory));
         this.shortcutFactory = shortcutFactory ?? throw new ArgumentNullException(nameof(shortcutFactory));
-        ShortcutGroups = new List<IShortcutGroup>();
-        Directory.CreateDirectory(StorageLocation.Config);
-        Directory.CreateDirectory(StorageLocation.Shortcuts);
-        Directory.CreateDirectory(StorageLocation.Icons);
-        LoadState();
     }
 
     public event EventHandler<IShortcutGroup>? ShortcutGroupRemoved;
-    public List<IShortcutGroup> ShortcutGroups { get; private set; }
+    public List<IShortcutGroup> ShortcutGroups => stateProvider.ShortcutGroups;
 
     public void SaveState()
     {
-        stateStore.Save(ShortcutGroups);
+        stateProvider.Save();
         foreach (var group in ShortcutGroups)
             CreateOrUpdateShortcutForGroup(group);
         var shortcutGroupNames = ShortcutGroups.Select(x => $"{x.Name}.lnk");
@@ -38,9 +34,6 @@ public class StateService : IStateService
             .Where(path => !shortcutGroupNames.Any(path.EndsWith))
             .ForEach(File.Delete);
     }
-
-    public void LoadState()
-        => ShortcutGroups = stateStore.Load()?.ToList() ?? new List<IShortcutGroup>();
 
     public IShortcutGroup CreateGroup()
     {
