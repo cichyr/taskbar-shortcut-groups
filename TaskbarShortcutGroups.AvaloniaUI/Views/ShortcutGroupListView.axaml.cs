@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace TaskbarShortcutGroups.Avalonia.Views;
+namespace TaskbarShortcutGroups.AvaloniaUI.Views;
 
 public partial class ShortcutGroupListView : UserControl
 {

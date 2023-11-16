@@ -1,11 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
-using TaskbarShortcutGroups.Avalonia.Extensions;
+using TaskbarShortcutGroups.AvaloniaUI.Extensions;
 using TaskbarShortcutGroups.Common.Services;
 using FileDialogFilter = TaskbarShortcutGroups.Common.Models.FileDialogFilter;
 
-namespace TaskbarShortcutGroups.Avalonia.Services;
+namespace TaskbarShortcutGroups.AvaloniaUI.Services;
 
 public class DialogService : IDialogService
 {

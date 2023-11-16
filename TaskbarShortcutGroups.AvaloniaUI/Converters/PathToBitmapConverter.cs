@@ -4,7 +4,7 @@ using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
 
-namespace TaskbarShortcutGroups.Avalonia.Converters;
+namespace TaskbarShortcutGroups.AvaloniaUI.Converters;
 
 public class PathToBitmapConverter : IValueConverter
 {

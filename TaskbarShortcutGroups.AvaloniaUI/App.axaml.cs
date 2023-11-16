@@ -4,15 +4,15 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using DryIoc;
-using TaskbarShortcutGroups.Avalonia.Services;
-using TaskbarShortcutGroups.Avalonia.Views;
+using TaskbarShortcutGroups.AvaloniaUI.Services;
+using TaskbarShortcutGroups.AvaloniaUI.Views;
 using TaskbarShortcutGroups.Common.IoC.Factories;
 using TaskbarShortcutGroups.Common.Models;
 using TaskbarShortcutGroups.Common.Providers;
 using TaskbarShortcutGroups.Common.Services;
 using TaskbarShortcutGroups.Common.ViewModels;
 
-namespace TaskbarShortcutGroups.Avalonia;
+namespace TaskbarShortcutGroups.AvaloniaUI;
 
 public class App : Application
 {

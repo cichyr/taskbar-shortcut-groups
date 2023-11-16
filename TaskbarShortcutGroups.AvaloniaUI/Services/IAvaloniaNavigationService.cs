@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using TaskbarShortcutGroups.Common.Services;
 
-namespace TaskbarShortcutGroups.Avalonia.Services;
+namespace TaskbarShortcutGroups.AvaloniaUI.Services;
 
 /// <summary>
 /// The Avalonia-specific implementation of navigation service.

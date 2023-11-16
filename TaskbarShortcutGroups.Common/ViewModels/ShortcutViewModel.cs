@@ -46,12 +46,14 @@ public class ShortcutViewModel : ObservableObject
 
     public void RunAndStopApplication()
     {
-        var process = new ProcessStartInfo();
-        process.Arguments = innerObject.Arguments;
-        process.FileName = innerObject.ExecutablePath;
-        process.WorkingDirectory = innerObject.WorkingDirectory;
-        process.UseShellExecute = true;
-        process.WindowStyle = innerObject.WindowStyle;
+        var process = new ProcessStartInfo
+        {
+            Arguments = innerObject.Arguments,
+            FileName = innerObject.ExecutablePath,
+            WorkingDirectory = innerObject.WorkingDirectory,
+            UseShellExecute = true,
+            WindowStyle = innerObject.WindowStyle
+        };
         Process.Start(process);
         Environment.Exit(0);
     }

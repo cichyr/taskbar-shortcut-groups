@@ -2,7 +2,7 @@ using System.Linq;
 using Avalonia.Platform.Storage;
 using TaskbarShortcutGroups.Common.Models;
 
-namespace TaskbarShortcutGroups.Avalonia.Extensions;
+namespace TaskbarShortcutGroups.AvaloniaUI.Extensions;
 
 public static class FileDialogFilterExtensions
 {

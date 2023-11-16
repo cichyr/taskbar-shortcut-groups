@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using TaskbarShortcutGroups.Common.ViewModels;
 
-namespace TaskbarShortcutGroups.Avalonia;
+namespace TaskbarShortcutGroups.AvaloniaUI;
 
 public class ViewLocator : IDataTemplate
 {

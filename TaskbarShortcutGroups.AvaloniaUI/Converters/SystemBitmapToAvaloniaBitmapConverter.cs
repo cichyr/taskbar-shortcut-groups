@@ -9,7 +9,7 @@ using Avalonia.Platform;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
-namespace TaskbarShortcutGroups.Avalonia.Converters;
+namespace TaskbarShortcutGroups.AvaloniaUI.Converters;
 
 public class SystemBitmapToAvaloniaBitmapConverter : IValueConverter
 {

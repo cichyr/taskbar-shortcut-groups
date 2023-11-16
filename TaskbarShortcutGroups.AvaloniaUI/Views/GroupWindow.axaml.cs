@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Control = System.Windows.Forms.Control;
 
-namespace TaskbarShortcutGroups.Avalonia.Views;
+namespace TaskbarShortcutGroups.AvaloniaUI.Views;
 
 public partial class GroupWindow : Window
 {

@@ -6,7 +6,7 @@ using TaskbarShortcutGroups.Common.Services;
 using TaskbarShortcutGroups.Common.ViewModels;
 using FileDialogFilter = TaskbarShortcutGroups.Common.Models.FileDialogFilter;
 
-namespace TaskbarShortcutGroups.Avalonia.Services;
+namespace TaskbarShortcutGroups.AvaloniaUI.Services;
 
 internal class NavigationService : IAvaloniaNavigationService
 {

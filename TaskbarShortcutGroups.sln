@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskbarShortcutGroups.Avalonia", "TaskbarShortcutGroups.Avalonia\TaskbarShortcutGroups.Avalonia.csproj", "{68579153-7E9D-4EE2-83B4-BF80CFD96D46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskbarShortcutGroups.AvaloniaUI", "TaskbarShortcutGroups.AvaloniaUI\TaskbarShortcutGroups.AvaloniaUI.csproj", "{68579153-7E9D-4EE2-83B4-BF80CFD96D46}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskbarShortcutGroups.Common", "TaskbarShortcutGroups.Common\TaskbarShortcutGroups.Common.csproj", "{61162024-E9CA-4415-AFC2-B1BF1A5CEF4E}"
 EndProject
