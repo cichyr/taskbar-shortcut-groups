@@ -51,18 +51,6 @@ public class ShortcutGroupListViewModel : ViewModelBase
         ShortcutGroups.Remove(viewModelToRemove);
     }
 
-    public void OpenShortcut(string path)
-    {
-        var sc = new Shortcut(path);
-        var process = new ProcessStartInfo();
-        process.Arguments = sc.Arguments;
-        process.FileName = sc.ExecutablePath;
-        process.WorkingDirectory = sc.WorkingDirectory;
-        process.UseShellExecute = true;
-        process.WindowStyle = sc.WindowStyle;
-        Process.Start(process);
-    }
-
     public void AddNewGroup()
     {
         var shortcutGroup = groupEditorFactory.Create();

@@ -11,12 +11,13 @@ using TaskbarShortcutGroups.Common.Models;
 using TaskbarShortcutGroups.Common.Providers;
 using TaskbarShortcutGroups.Common.Services;
 using TaskbarShortcutGroups.Common.ViewModels;
+using TaskbarShortcutGroups.Windows.IoC.Factories;
 
 namespace TaskbarShortcutGroups.AvaloniaUI;
 
 public class App : Application
 {
-    private static IContainer IoCContainer { get; } = new Container();
+    public static IContainer IoCContainer { get; } = new Container();
 
     public override void Initialize()
         => AvaloniaXamlLoader.Load(this);

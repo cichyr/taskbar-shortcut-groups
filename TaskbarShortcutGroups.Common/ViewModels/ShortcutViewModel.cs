@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using CommunityToolkit.Mvvm.ComponentModel;
+using TaskbarShortcutGroups.Common.IoC.Factories;
 using TaskbarShortcutGroups.Common.Models;
 
 namespace TaskbarShortcutGroups.Common.ViewModels;
@@ -9,9 +10,9 @@ public class ShortcutViewModel : ObservableObject
 {
     private readonly IShortcut innerObject;
 
-    public ShortcutViewModel(string path, IShortcutGroup parentGroup)
+    public ShortcutViewModel(string path, IShortcutGroup parentGroup, IShortcutFactory shortcutFactory)
     {
-        innerObject = new Shortcut(path);
+        innerObject = shortcutFactory.Create(path);
         parentGroup.Shortcuts.Add(innerObject);
     }
 

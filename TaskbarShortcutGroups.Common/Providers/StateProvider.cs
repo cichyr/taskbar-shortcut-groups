@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using TaskbarShortcutGroups.Common.Constants;
 using TaskbarShortcutGroups.Common.Models;
 using TaskbarShortcutGroups.Common.Services;
@@ -17,7 +18,7 @@ public class StateProvider : IStateProvider
         ShortcutGroups = stateStore.Load()?.ToList() ?? new List<IShortcutGroup>();
     }
 
-    public List<IShortcutGroup> ShortcutGroups { get; private set; }
+    public List<IShortcutGroup> ShortcutGroups { get; }
 
     public void Save()
         => stateStore.Save(ShortcutGroups);

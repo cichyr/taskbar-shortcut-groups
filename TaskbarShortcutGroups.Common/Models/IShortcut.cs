@@ -42,13 +42,13 @@ public interface IShortcut : IDisposable
     /// Gets or sets the startup arguments of the executable to which <see cref="ExecutablePath" /> is pointing to.
     /// </summary>
     /// <exception cref="ArgumentException"> If provided description is too long. </exception>
-    unsafe string Arguments { get; set; }
+    string Arguments { get; set; }
 
     /// <summary>
     /// Gets or sets the icon location.
     /// </summary>
     /// <exception cref="ArgumentException"> If provided path is longer than allowed (260 characters). </exception>
-    unsafe IconLocation? IconLocation { get; set; }
+    IconLocation? IconLocation { get; set; }
 
     /// <summary>
     /// Saves the shortcut in provided path.

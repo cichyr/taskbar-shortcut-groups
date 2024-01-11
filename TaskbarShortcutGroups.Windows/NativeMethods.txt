@@ -7,3 +7,5 @@ SLGP_FLAGS
 ExtractIconA
 ExtractIconExA
 ExtractIconExW
+GetCursorPos
+GetCursor

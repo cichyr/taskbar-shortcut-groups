@@ -33,5 +33,6 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\TaskbarShortcutGroups.Common\TaskbarShortcutGroups.Common.csproj" />
+      <ProjectReference Include="..\TaskbarShortcutGroups.Windows\TaskbarShortcutGroups.Windows.csproj" />
     </ItemGroup>
 </Project>

@@ -12,8 +12,15 @@ public interface IShortcutViewModelFactory
 
 public class ShortcutViewModelFactory : IShortcutViewModelFactory
 {
+    private readonly IShortcutFactory shortcutFactory;
+
+    public ShortcutViewModelFactory(IShortcutFactory shortcutFactory)
+    {
+        this.shortcutFactory = shortcutFactory;
+    }
+    
     public ShortcutViewModel Create(string path, IShortcutGroup parentGroup)
-        => new(path, parentGroup);
+        => new(path, parentGroup, shortcutFactory);
     public ShortcutViewModel Create(IShortcut shortcut)
         => new(shortcut);
 }
@@ -52,19 +59,6 @@ public interface IShortcutFactory
 {
     IShortcut Create();
     IShortcut Create(string path);
-}
-
-public class ShortcutFactory : IShortcutFactory
-{
-    public IShortcut Create()
-    {
-        return new Shortcut();
-    }
-
-    public IShortcut Create(string path)
-    {
-        return new Shortcut(path);
-    }
 }
 
 public interface IShortcutGroupFactory
