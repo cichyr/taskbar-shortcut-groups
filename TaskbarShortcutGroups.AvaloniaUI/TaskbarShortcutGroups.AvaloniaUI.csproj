@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <AssemblyName>TaskbarShortcutGroups.AvaloniaUI</AssemblyName>
         <RootNamespace>TaskbarShortcutGroups.AvaloniaUI</RootNamespace>
-        <OutputType>WinExe</OutputType>
-        <UseWindowsForms>true</UseWindowsForms>
+        <OutputType Condition="'$(Configuration)' == 'Debug'">Exe</OutputType>
+        <OutputType Condition="'$(Configuration)' != 'Debug'">WinExe</OutputType>
         <TargetFramework>net8.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
     <PropertyGroup>
         <Authors>CichyR</Authors>
         <Version>0.1.0</Version>
@@ -14,25 +16,30 @@
         <Product>Taskbar Shortcut Groups</Product>
         <RepositoryUrl>https://github.com/cichyr/taskbar-shortcut-groups</RepositoryUrl>
     </PropertyGroup>
+
     <ItemGroup>
         <Content Include="Licenses\*.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
+
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
-        <None Remove=".gitignore" />
+        <AvaloniaResource Include="Assets\**"/>
+        <None Remove=".gitignore"/>
     </ItemGroup>
+
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.6" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
+        <PackageReference Include="Avalonia" Version="11.0.6"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.6"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Include="DryIoc.dll" Version="5.4.3" />
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
-        <PackageReference Include="FluentAvaloniaUI" Version="2.0.4" />
+        <PackageReference Include="DryIoc.dll" Version="5.4.3"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6"/>
+        <PackageReference Include="FluentAvaloniaUI" Version="2.0.4"/>
     </ItemGroup>
+
     <ItemGroup>
-      <ProjectReference Include="..\TaskbarShortcutGroups.Common\TaskbarShortcutGroups.Common.csproj" />
-      <ProjectReference Include="..\TaskbarShortcutGroups.Windows\TaskbarShortcutGroups.Windows.csproj" />
+        <ProjectReference Include="..\TaskbarShortcutGroups.Common\TaskbarShortcutGroups.Common.csproj"/>
+        <ProjectReference Include="..\TaskbarShortcutGroups.Windows\TaskbarShortcutGroups.Windows.csproj"/>
     </ItemGroup>
+    
 </Project>
