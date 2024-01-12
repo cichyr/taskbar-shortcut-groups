@@ -13,6 +13,7 @@
     <PropertyGroup>
         <Authors>CichyR</Authors>
         <Version>0.1.0</Version>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <PackageId>TaskbarShortcutGroups</PackageId>
         <Product>Taskbar Shortcut Groups</Product>
         <RepositoryUrl>https://github.com/cichyr/taskbar-shortcut-groups</RepositoryUrl>
