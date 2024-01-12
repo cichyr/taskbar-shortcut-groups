@@ -16,15 +16,13 @@ public class IconToBitmapConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not Icon imageIcon)
-        {
             return value is null
                 ? new BindingNotification(new InvalidCastException("Expected icon object, received null"), BindingErrorType.Error)
                 : new BindingNotification(new InvalidCastException($"Expected icon object, received {value.GetType().FullName}"), BindingErrorType.Error);
-        }
 
         var bitmapTmp = imageIcon.ToBitmap();
         var bitmapData = bitmapTmp.LockBits(new Rectangle(0, 0, bitmapTmp.Width, bitmapTmp.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
-        var bitmap1 = new Bitmap(global::Avalonia.Platform.PixelFormat.Bgra8888,
+        var bitmap1 = new Bitmap(Avalonia.Platform.PixelFormat.Bgra8888,
             AlphaFormat.Premul,
             bitmapData.Scan0,
             new PixelSize(bitmapData.Width, bitmapData.Height),

@@ -12,6 +12,7 @@ using TaskbarShortcutGroups.Common.Providers;
 using TaskbarShortcutGroups.Common.Services;
 using TaskbarShortcutGroups.Common.ViewModels;
 using TaskbarShortcutGroups.Windows.IoC.Factories;
+using TaskbarShortcutGroups.Windows.Services;
 
 namespace TaskbarShortcutGroups.AvaloniaUI;
 
@@ -38,14 +39,15 @@ public class App : Application
         IoCContainer.Register<AboutViewModel>(Reuse.Singleton);
         IoCContainer.Register<ShortcutGroupListViewModel>(Reuse.Singleton);
         IoCContainer.Register<IShortcutGroupEditorViewModelFactory, ShortcutGroupEditorViewModelFactory>(Reuse.Singleton);
-        IoCContainer.Register<IShortcutFactory, ShortcutFactory>(Reuse.Singleton);
         IoCContainer.Register<IShortcutGroupFactory, ShortcutGroupFactory>(Reuse.Singleton);
     }
 
     private static void PerformBasicIoCSetup()
     {
+        IoCContainer.Register<IShortcutFactory, ShortcutFactory>(Reuse.Singleton);
         IoCContainer.Register<IStateStore, StateStore>(Reuse.Singleton);
         IoCContainer.Register<IStateProvider, StateProvider>(Reuse.Singleton);
+        IoCContainer.Register<IOsService, OsService>(Reuse.Singleton);
         IoCContainer.Register<IShortcutViewModelFactory, ShortcutViewModelFactory>(Reuse.Singleton);
         IoCContainer.Register<ShortcutGroupViewModel>(Reuse.Singleton);
     }

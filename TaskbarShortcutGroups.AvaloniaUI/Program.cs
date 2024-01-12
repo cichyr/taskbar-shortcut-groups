@@ -35,7 +35,7 @@ internal static class Program
 
             if (assemblyNameFromReferences != null)
                 return Assembly.Load(assemblyNameFromReferences);
-            
+
             var dllName = args.Name.Split(",")[0] + ".dll";
             var alternativeAssemblyPath = Path.Combine(AssembliesPath, dllName);
             return !string.IsNullOrEmpty(alternativeAssemblyPath) && File.Exists(alternativeAssemblyPath)

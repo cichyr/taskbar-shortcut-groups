@@ -18,9 +18,10 @@ public class ShortcutViewModelFactory : IShortcutViewModelFactory
     {
         this.shortcutFactory = shortcutFactory;
     }
-    
+
     public ShortcutViewModel Create(string path, IShortcutGroup parentGroup)
         => new(path, parentGroup, shortcutFactory);
+
     public ShortcutViewModel Create(IShortcut shortcut)
         => new(shortcut);
 }
@@ -34,8 +35,8 @@ public interface IShortcutGroupEditorViewModelFactory
 public class ShortcutGroupEditorViewModelFactory : IShortcutGroupEditorViewModelFactory
 {
     private readonly INavigationService navigationService;
-    private readonly IStateService stateService;
     private readonly IShortcutViewModelFactory shortcutViewModelFactory;
+    private readonly IStateService stateService;
 
     public ShortcutGroupEditorViewModelFactory(INavigationService navigationService, IStateService stateService, IShortcutViewModelFactory shortcutViewModelFactory)
     {
@@ -45,14 +46,10 @@ public class ShortcutGroupEditorViewModelFactory : IShortcutGroupEditorViewModel
     }
 
     public ShortcutGroupEditorViewModel Create(IShortcutGroup shortcutGroup)
-    {
-        return new ShortcutGroupEditorViewModel(navigationService, stateService, shortcutViewModelFactory, shortcutGroup);
-    }
+        => new(navigationService, stateService, shortcutViewModelFactory, shortcutGroup);
 
     public ShortcutGroupEditorViewModel Create()
-    {
-        return new ShortcutGroupEditorViewModel(navigationService, stateService, shortcutViewModelFactory);
-    }
+        => new(navigationService, stateService, shortcutViewModelFactory);
 }
 
 public interface IShortcutFactory
@@ -69,7 +66,5 @@ public interface IShortcutGroupFactory
 public class ShortcutGroupFactory : IShortcutGroupFactory
 {
     public IShortcutGroup Create()
-    {
-        return new ShortcutGroup();
-    }
+        => new ShortcutGroup();
 }

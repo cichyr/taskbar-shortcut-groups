@@ -6,7 +6,7 @@
              xmlns:viewModels="clr-namespace:TaskbarShortcutGroups.Common.ViewModels;assembly=TaskbarShortcutGroups.Common"
              xmlns:converters="clr-namespace:TaskbarShortcutGroups.AvaloniaUI.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:CompileBindings="True" x:DataType="viewModels:ShortcutGroupEditorViewModel"
+             x:DataType="viewModels:ShortcutGroupEditorViewModel"
              x:Class="TaskbarShortcutGroups.AvaloniaUI.Views.ShortcutGroupEditorView">
     <UserControl.Resources>
         <converters:PathToBitmapConverter x:Key="PathToBitmapConverter" />
@@ -35,8 +35,9 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <DockPanel Width="NaN" Margin="10,20,0,0">
-                                <Image Source="{Binding Icon, Converter={StaticResource SystemBitmapToAvaloniaBitmapConverter}}"
-                                       Margin="3,0,0,0" Width="40" Height="40" DockPanel.Dock="Left" />
+                                <Image
+                                    Source="{Binding Icon, Converter={StaticResource SystemBitmapToAvaloniaBitmapConverter}}"
+                                    Margin="3,0,0,0" Width="40" Height="40" DockPanel.Dock="Left" />
                                 <TextBlock Margin="10,0,0,0" Text="{Binding Name}" ToolTip.Tip="{Binding Path}"
                                            VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <Button DockPanel.Dock="Right"
@@ -71,7 +72,7 @@
                 </ListBoxItem>
             </Grid>
         </ScrollViewer>
-        
+
         <Grid Grid.Row="6" Margin="20" ColumnDefinitions="*, Auto">
             <Button Content="Back" Command="{Binding NavigateBack}" HorizontalAlignment="Right" />
             <Button Grid.Column="1" Margin="20,0,0,0" Content="Save" Command="{Binding SaveGroup}" />

@@ -11,7 +11,7 @@
 
     <ItemGroup>
         <!-- Generate direct PInvoke for all APIs listed in NativeMethods.txt -->
-        <DirectPInvokeList Include="NativeMethods.txt" />
+        <DirectPInvokeList Include="NativeMethods.txt"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\TaskbarShortcutGroups.Common\TaskbarShortcutGroups.Common.csproj" />
+        <ProjectReference Include="..\TaskbarShortcutGroups.Common\TaskbarShortcutGroups.Common.csproj"/>
     </ItemGroup>
 
 </Project>

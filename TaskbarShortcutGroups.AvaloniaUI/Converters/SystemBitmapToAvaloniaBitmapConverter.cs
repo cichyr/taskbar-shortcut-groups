@@ -23,7 +23,7 @@ public class SystemBitmapToAvaloniaBitmapConverter : IValueConverter
                 : new BindingNotification(new InvalidCastException($"Expected System.Drawing.Bitmap object, received {value.GetType().FullName}"), BindingErrorType.Error);
 
         var bitmapData = systemBitmap.LockBits(new Rectangle(0, 0, systemBitmap.Width, systemBitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
-        var avaloniaBitmap = new Bitmap(global::Avalonia.Platform.PixelFormat.Bgra8888,
+        var avaloniaBitmap = new Bitmap(Avalonia.Platform.PixelFormat.Bgra8888,
             AlphaFormat.Premul,
             bitmapData.Scan0,
             new PixelSize(bitmapData.Width, bitmapData.Height),

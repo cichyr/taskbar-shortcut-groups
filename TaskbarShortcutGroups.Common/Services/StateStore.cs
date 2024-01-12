@@ -15,7 +15,7 @@ public class StateStore : IStateStore
     {
         this.shortcutFactory = shortcutFactory ?? throw new ArgumentNullException(nameof(shortcutFactory));
     }
-    
+
     public void Save(IEnumerable<IShortcutGroup> shortcutGroups)
     {
         var shortcutGroupsDefinition = new ShortcutGroupsDefinition();
@@ -24,20 +24,20 @@ public class StateStore : IStateStore
             var shortcutGroupDefinition = new ShortcutGroupDefinition
             {
                 Name = shortcutGroup.Name,
-                IconPath = shortcutGroup.IconPath,
+                IconPath = shortcutGroup.IconPath
             };
-            
+
             shortcutGroup.Shortcuts
                 .Select(shortcut => new ShortcutDefinition
                 {
                     Name = shortcut.Name,
-                    FilePath = shortcut.Location,
+                    FilePath = shortcut.Location
                 })
                 .ForEach(s => shortcutGroupDefinition.Shortcuts.Add(s));
-            
+
             shortcutGroupsDefinition.ShortcutGroups.Add(shortcutGroupDefinition);
         }
-        
+
         using var fileStream = new FileStream(StorageLocation.StateFile, FileMode.OpenOrCreate, FileAccess.Write);
         JsonSerializer.Serialize(fileStream, shortcutGroupsDefinition, SourceGenerationContext.Default.ShortcutGroupsDefinition);
         fileStream.Flush();
@@ -55,7 +55,7 @@ public class StateStore : IStateStore
             {
                 Name = sgd.Name,
                 IconPath = sgd.IconPath,
-                Shortcuts = sgd.Shortcuts.Select(sd => shortcutFactory.Create(sd.FilePath)).ToHashSet(),
+                Shortcuts = sgd.Shortcuts.Select(sd => shortcutFactory.Create(sd.FilePath)).ToHashSet()
             });
     }
 }

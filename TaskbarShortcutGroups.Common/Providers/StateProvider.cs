@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using TaskbarShortcutGroups.Common.Constants;
 using TaskbarShortcutGroups.Common.Models;
 using TaskbarShortcutGroups.Common.Services;
@@ -15,7 +14,7 @@ public class StateProvider : IStateProvider
         Directory.CreateDirectory(StorageLocation.Config);
         Directory.CreateDirectory(StorageLocation.Shortcuts);
         Directory.CreateDirectory(StorageLocation.Icons);
-        ShortcutGroups = stateStore.Load()?.ToList() ?? new List<IShortcutGroup>();
+        ShortcutGroups = stateStore.Load()?.ToList() ?? [];
     }
 
     public List<IShortcutGroup> ShortcutGroups { get; }

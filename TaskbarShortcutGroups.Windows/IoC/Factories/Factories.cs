@@ -6,10 +6,6 @@ namespace TaskbarShortcutGroups.Windows.IoC.Factories;
 
 public class ShortcutFactory : IShortcutFactory
 {
-    public ShortcutFactory()
-    {
-    }
-    
     public IShortcut Create()
         => new Shortcut();
 

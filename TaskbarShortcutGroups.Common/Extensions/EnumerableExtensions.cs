@@ -7,9 +7,6 @@ public static class EnumerableExtensions
         ArgumentNullException.ThrowIfNull(elements);
         ArgumentNullException.ThrowIfNull(action);
 
-        foreach (var element in elements)
-        {
-            action(element);
-        }
+        foreach (var element in elements) action(element);
     }
 }

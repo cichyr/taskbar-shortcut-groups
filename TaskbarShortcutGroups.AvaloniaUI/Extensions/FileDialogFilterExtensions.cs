@@ -7,8 +7,8 @@ namespace TaskbarShortcutGroups.AvaloniaUI.Extensions;
 public static class FileDialogFilterExtensions
 {
     public static FilePickerFileType ToAvaloniaFilter(this FileDialogFilter fileDialogFilter) =>
-        new (fileDialogFilter.Name)
+        new(fileDialogFilter.Name)
         {
-            Patterns = fileDialogFilter.Extensions.ToList(),
+            Patterns = fileDialogFilter.Extensions.ToList()
         };
 }

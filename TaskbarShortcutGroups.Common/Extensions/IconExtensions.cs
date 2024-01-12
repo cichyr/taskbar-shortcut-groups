@@ -11,7 +11,7 @@ public static class IconExtensions
     /// <param name="icon"> The icon to save. </param>
     /// <param name="pathToSave"> The path of target file. </param>
     /// <param name="overwriteIfExists"> Whether the icon should be overwritten. </param>
-    /// <returns> The given <paramref name="icon"/>. </returns>
+    /// <returns> The given <paramref name="icon" />. </returns>
     /// <exception cref="InvalidOperationException"> When <paramref name="pathToSave" /> exists and <paramref name="overwriteIfExists" /> is false. </exception>
     public static Icon Save(this Icon icon, string pathToSave, bool overwriteIfExists = false)
     {
