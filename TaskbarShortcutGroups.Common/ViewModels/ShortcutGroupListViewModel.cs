@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -16,6 +17,7 @@ public class ShortcutGroupListViewModel : ViewModelBase
     private readonly INavigationService navigationService;
     private readonly IStateService stateService;
     private ICommand? navigateToGroup;
+    private ICommand? openShortcutsLocation;
     private ICommand? removeGroup;
 
     public ShortcutGroupListViewModel(INavigationService navigationService, IStateService stateService, IShortcutGroupEditorViewModelFactory groupEditorFactory, AboutViewModel aboutViewModel)
@@ -26,7 +28,10 @@ public class ShortcutGroupListViewModel : ViewModelBase
         this.groupEditorFactory = groupEditorFactory ?? throw new ArgumentNullException(nameof(groupEditorFactory));
         ShortcutGroups = new ObservableCollection<ShortcutGroupEditorViewModel>(stateService.ShortcutGroups.Select(groupEditorFactory.Create));
         this.stateService.ShortcutGroupRemoved += HandleShortcutGroupRemoved;
+        aboutViewModel.PropertyChanged += AboutViewModelOnPropertyChanged;
     }
+
+    public bool UpdateDetected => aboutViewModel.UpdateDetected;
 
     public ObservableCollection<ShortcutGroupEditorViewModel> ShortcutGroups { get; }
 
@@ -45,6 +50,14 @@ public class ShortcutGroupListViewModel : ViewModelBase
             navigationService.Navigate(shortcutGroup);
         });
 
+    public ICommand OpenShortcutsLocation => openShortcutsLocation ??= new RelayCommand(() => Process.Start("explorer.exe", StorageLocation.Shortcuts));
+
+    private void AboutViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(aboutViewModel.UpdateDetected))
+            OnPropertyChanged(nameof(UpdateDetected));
+    }
+
     private void HandleShortcutGroupRemoved(object? sender, IShortcutGroup removedShortcutGroup)
     {
         var viewModelToRemove = ShortcutGroups.First(x => x.InnerObject == removedShortcutGroup);
@@ -60,7 +73,4 @@ public class ShortcutGroupListViewModel : ViewModelBase
 
     public void OpenAboutView()
         => navigationService.Navigate(aboutViewModel);
-
-    public void OpenShortcutsLocation()
-        => Process.Start("explorer.exe", StorageLocation.Shortcuts);
 }

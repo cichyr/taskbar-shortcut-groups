@@ -15,12 +15,23 @@ public class AboutViewModel : ViewModelBase
         this.navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
         this.licenseProvider = licenseProvider ?? throw new ArgumentNullException(nameof(licenseProvider));
         this.versionProvider = versionProvider ?? throw new ArgumentNullException(nameof(versionProvider));
+        this.versionProvider.NewerVersionDetected += VersionProviderOnNewerVersionDetected;
         this.licenseProvider.Initialize();
+    }
+
+    private void VersionProviderOnNewerVersionDetected(object? o, EventArgs eventArgs)
+    {
+        OnPropertyChanged(nameof(NewerVersionString));
+        OnPropertyChanged(nameof(UpdateDetected));
     }
 
     public IEnumerable<ILicense> Licenses => licenseProvider.Licenses;
 
     public string VersionString => $"v{versionProvider.ProductVersion}";
+
+    public bool UpdateDetected => versionProvider.UpdateDetected;
+
+    public string NewerVersionString => $"v{versionProvider.NewestVersion}";
 
     public void NavigateBack()
         => navigationService.NavigateBack();
