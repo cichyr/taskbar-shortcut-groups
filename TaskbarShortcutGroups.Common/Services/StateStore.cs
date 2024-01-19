@@ -38,7 +38,7 @@ public class StateStore : IStateStore
             shortcutGroupsDefinition.ShortcutGroups.Add(shortcutGroupDefinition);
         }
 
-        using var fileStream = new FileStream(StorageLocation.StateFile, FileMode.OpenOrCreate, FileAccess.Write);
+        using var fileStream = new FileStream(StorageLocation.StateFile, FileMode.Create, FileAccess.Write);
         JsonSerializer.Serialize(fileStream, shortcutGroupsDefinition, SourceGenerationContext.Default.ShortcutGroupsDefinition);
         fileStream.Flush();
     }
