@@ -16,6 +16,7 @@
         <entry key="TaskbarShortcutGroups.AvaloniaUI/App.axaml" value="TaskbarShortcutGroups.AvaloniaUI/TaskbarShortcutGroups.AvaloniaUI.csproj" />
         <entry key="TaskbarShortcutGroups.AvaloniaUI/Views/AboutView.axaml" value="TaskbarShortcutGroups.AvaloniaUI/TaskbarShortcutGroups.AvaloniaUI.csproj" />
         <entry key="TaskbarShortcutGroups.AvaloniaUI/Views/GroupWindow.axaml" value="TaskbarShortcutGroups.AvaloniaUI/TaskbarShortcutGroups.AvaloniaUI.csproj" />
+        <entry key="TaskbarShortcutGroups.AvaloniaUI/Views/MainWindow.axaml" value="TaskbarShortcutGroups.AvaloniaUI/TaskbarShortcutGroups.AvaloniaUI.csproj" />
         <entry key="TaskbarShortcutGroups.AvaloniaUI/Views/ShortcutGroupEditorView.axaml" value="TaskbarShortcutGroups.AvaloniaUI/TaskbarShortcutGroups.AvaloniaUI.csproj" />
         <entry key="TaskbarShortcutGroups.AvaloniaUI/Views/ShortcutGroupListView.axaml" value="TaskbarShortcutGroups.AvaloniaUI/TaskbarShortcutGroups.AvaloniaUI.csproj" />
         <entry key="TaskbarShortcutGroups.AvaloniaUI/Views/ShortcutGroupView.axaml" value="TaskbarShortcutGroups.AvaloniaUI/TaskbarShortcutGroups.AvaloniaUI.csproj" />
