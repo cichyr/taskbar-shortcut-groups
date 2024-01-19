@@ -12,6 +12,13 @@ public class VersionProvider : IVersionProvider
     private string? updatedVersion;
     private FileVersionInfo? versionInfo;
 
+    public VersionProvider(ITaskService taskService)
+    {
+        ArgumentNullException.ThrowIfNull(taskService);
+        var cancellationTokenSource = new CancellationTokenSource();
+        taskService.RegisterTask(Task.Run(() => FetchReleaseVersion(cancellationTokenSource.Token), CancellationToken.None), cancellationTokenSource);
+    }
+
     private FileVersionInfo VersionInfo => versionInfo ??= FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly()!.Location);
 
     public bool UpdateDetected => updatedVersion != null;

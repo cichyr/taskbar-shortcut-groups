@@ -32,6 +32,7 @@ public class App : Application
     private static void PerformExtendedIoCSetup()
     {
         IoCContainer.RegisterMany<NavigationService>(Reuse.Singleton);
+        IoCContainer.Register<ITaskService, TaskService>(Reuse.Singleton);
         IoCContainer.Register<IVersionProvider, VersionProvider>(Reuse.Singleton);
         IoCContainer.Register<IDialogService, DialogService>(Reuse.Singleton);
         IoCContainer.Register<ILicenseProvider, LicenseProvider>(Reuse.Singleton);
@@ -60,7 +61,7 @@ public class App : Application
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
                 desktop.Exit += (_, _) => IoCContainer.Dispose();
-                if (desktop.Args != null && desktop.Args.Any())
+                if (desktop.Args != null && desktop.Args.Length != 0)
                 {
                     var stateProvider = IoCContainer.Resolve<IStateProvider>();
                     var shortcutGroup = stateProvider.ShortcutGroups.FirstOrDefault(sg => sg.Name == desktop.Args[0]);
@@ -68,8 +69,13 @@ public class App : Application
                     {
                         var groupViewModelFactory = IoCContainer.Resolve<Func<IShortcutGroup, ShortcutGroupViewModel>>();
                         var groupViewModel = groupViewModelFactory(shortcutGroup);
-                        desktop.MainWindow = new GroupWindow {DataContext = groupViewModel};
-                        desktop.MainWindow.Content = groupViewModel;
+                        desktop.MainWindow = new GroupWindow
+                        {
+                            DataContext = groupViewModel,
+                            Content = groupViewModel,
+                            Focusable = true,
+                        };
+                        
 #if !DEBUG
                         desktop.MainWindow.LostFocus += (_,_) =>
                         {
@@ -77,7 +83,7 @@ public class App : Application
                                 Environment.Exit(0);
                         };
 #endif
-                        desktop.MainWindow.Focusable = true;
+
                         desktop.MainWindow.Focus();
                         return;
                     }
