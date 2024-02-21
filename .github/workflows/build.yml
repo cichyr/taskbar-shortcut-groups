@@ -1,7 +1,7 @@
 name: Build
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -20,11 +20,8 @@ jobs:
         with: 
           dotnet-version: 8.0.x
 
-      - name: Restore NuGet
-        run: dotnet restore
-
       - name: Build
-        run: dotnet publish TaskbarShortcutGroups.sln --no-restore -r ${{ matrix.architecture }} --self-contained ${{ matrix.self-contained }} -f net8.0-windows -c Release -p:PublishReadyToRun=true --nologo
+        run: dotnet publish TaskbarShortcutGroups.sln -r ${{ matrix.architecture }} --self-contained ${{ matrix.self-contained }} -f net8.0-windows -c Release --nologo
 
       - name: Publish artifacts
         uses: actions/upload-artifact@v4
