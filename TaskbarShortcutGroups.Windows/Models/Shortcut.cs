@@ -43,14 +43,12 @@ public class Shortcut : IShortcut
             if (shellLink != null)
                 return shellLink;
 
-            // ReSharper disable SuspiciousTypeConversion.Global - ComImport, nothing I can do
             shellLink = (IShellLinkW)new ShellLink();
             if (File.Exists(Location))
                 fixed (char* pszFileName = Location)
                 {
                     ((IPersistFile)shellLink).Load(pszFileName, STGM.STGM_READ);
                 }
-            // ReSharper restore SuspiciousTypeConversion.Global
 
             return shellLink;
         }
@@ -196,12 +194,14 @@ public class Shortcut : IShortcut
         }
     }
 
+    /// <inheritdoc />
+    public int Order { get; set; }
+
     /// <summary>
     /// Saves the shortcut in provided path.
     /// </summary>
     /// <param name="path"> The path to the saving directory. </param>
     public void Save(string path)
-        // ReSharper disable once SuspiciousTypeConversion.Global - ComImport, nothing I can do
         => (ShellLink as IPersistFile).Save(Path.Combine(path, $"{Name}.lnk"), false);
 
     /// <inheritdoc />

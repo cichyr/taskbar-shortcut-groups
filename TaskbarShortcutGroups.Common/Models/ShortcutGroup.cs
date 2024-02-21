@@ -10,6 +10,8 @@ public class ShortcutGroup : IShortcutGroup
 
     public HashSet<IShortcut> Shortcuts { get; init; } = new();
 
+    public int Order { get; set; }
+
     public void Dispose()
     {
         Shortcuts.ForEach(x => x.Dispose());

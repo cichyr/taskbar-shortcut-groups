@@ -38,6 +38,9 @@ public class StateService : IStateService
     public IShortcutGroup CreateGroup()
     {
         var newGroup = shortcutGroupFactory.Create();
+        newGroup.Order = ShortcutGroups.Any()
+            ? ShortcutGroups.Max(x => x.Order) + 1
+            : 0;
         ShortcutGroups.Add(newGroup);
         return newGroup;
     }
@@ -45,6 +48,9 @@ public class StateService : IStateService
     public IShortcut AddShortcutToGroup(IShortcutGroup group, string path)
     {
         var newShortcut = shortcutFactory.Create(path);
+        newShortcut.Order = group.Shortcuts.Any()
+            ? group.Shortcuts.Max(x => x.Order) + 1
+            : 0;
         if (!group.Shortcuts.Add(newShortcut))
             throw new ArgumentException("Cannot add the same IShortcut twice");
         return newShortcut;
@@ -78,7 +84,11 @@ public class StateService : IStateService
     {
         var shortcutPath = Path.Join(StorageLocation.Shortcuts, $"{group.Name}.lnk");
         var iconPath = Path.Join(StorageLocation.Icons, $"{group.Name}.ico");
-        new Bitmap(group.IconPath).ToIcon().Save(iconPath, true).Dispose();
+        if (File.Exists(group.IconPath))
+            new Bitmap(group.IconPath)
+                .ToIcon()
+                .Save(iconPath, true)
+                .Dispose();
         var shortcutExists = File.Exists(shortcutPath);
         using var shortcut = shortcutExists
             ? shortcutFactory.Create(shortcutPath)

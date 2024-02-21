@@ -16,6 +16,11 @@ public interface IShortcut : IDisposable
     string Name { get; set; }
 
     /// <summary>
+    /// Gets or sets the order within the group.
+    /// </summary>
+    int Order { get; set; }
+
+    /// <summary>
     /// Gets or sets the location of the shortcut.
     /// </summary>
     string Location { get; set; }

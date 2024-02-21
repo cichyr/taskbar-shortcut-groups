@@ -73,11 +73,11 @@ public class App : Application
                         {
                             DataContext = groupViewModel,
                             Content = groupViewModel,
-                            Focusable = true,
+                            Focusable = true
                         };
-                        
+
 #if !DEBUG
-                        desktop.MainWindow.LostFocus += (_,_) =>
+                        desktop.MainWindow.LostFocus += (_, _) =>
                         {
                             if (desktop.MainWindow.FocusManager!.GetFocusedElement() is null)
                                 Environment.Exit(0);

@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0-windows</TargetFramework>
+        <RuntimeIdentifiers>win-x64;win-x86;win-arm64</RuntimeIdentifiers>
         <ImplicitUsings>enable</ImplicitUsings>
         <IsAotCompatible>true</IsAotCompatible>
         <Nullable>enable</Nullable>

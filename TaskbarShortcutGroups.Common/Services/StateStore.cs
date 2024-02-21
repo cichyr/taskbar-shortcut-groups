@@ -24,6 +24,7 @@ public class StateStore : IStateStore
             var shortcutGroupDefinition = new ShortcutGroupDefinition
             {
                 Name = shortcutGroup.Name,
+                Order = shortcutGroup.Order,
                 IconPath = shortcutGroup.IconPath
             };
 
@@ -31,9 +32,10 @@ public class StateStore : IStateStore
                 .Select(shortcut => new ShortcutDefinition
                 {
                     Name = shortcut.Name,
+                    Order = shortcut.Order,
                     FilePath = shortcut.Location
                 })
-                .ForEach(s => shortcutGroupDefinition.Shortcuts.Add(s));
+                .ForEach(shortcutGroupDefinition.Shortcuts.Add);
 
             shortcutGroupsDefinition.ShortcutGroups.Add(shortcutGroupDefinition);
         }
@@ -47,6 +49,7 @@ public class StateStore : IStateStore
     {
         if (!File.Exists(StorageLocation.StateFile))
             return null;
+
         using var reader = new StreamReader(StorageLocation.StateFile);
         var shortcutGroupsDefinition = JsonSerializer.Deserialize(reader.BaseStream, SourceGenerationContext.Default.ShortcutGroupsDefinition);
 
@@ -55,7 +58,18 @@ public class StateStore : IStateStore
             {
                 Name = sgd.Name,
                 IconPath = sgd.IconPath,
-                Shortcuts = sgd.Shortcuts.Select(sd => shortcutFactory.Create(sd.FilePath)).ToHashSet()
-            });
+                Shortcuts = sgd.Shortcuts
+                    .Select(CreateShortcut)
+                    .OrderBy(s => s.Order)
+                    .ToHashSet()
+            })
+            .OrderBy(sg => sg.Order);
+    }
+
+    private IShortcut CreateShortcut(ShortcutDefinition shortcutDefinition)
+    {
+        var shortcut = shortcutFactory.Create(shortcutDefinition.FilePath);
+        shortcut.Order = shortcutDefinition.Order;
+        return shortcut;
     }
 }

@@ -6,5 +6,7 @@ public class ShortcutGroupDefinition
 
     public string IconPath { get; set; } = string.Empty;
 
+    public int Order { get; set; } = 0;
+
     public List<ShortcutDefinition> Shortcuts { get; set; } = new();
 }

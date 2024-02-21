@@ -9,5 +9,6 @@ public class FileDialogFilter
     }
 
     public string Name { get; }
+
     public string[] Extensions { get; }
 }

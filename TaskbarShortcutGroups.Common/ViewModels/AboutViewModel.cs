@@ -19,12 +19,6 @@ public class AboutViewModel : ViewModelBase
         this.licenseProvider.Initialize();
     }
 
-    private void VersionProviderOnNewerVersionDetected(object? o, EventArgs eventArgs)
-    {
-        OnPropertyChanged(nameof(NewerVersionString));
-        OnPropertyChanged(nameof(UpdateDetected));
-    }
-
     public IEnumerable<ILicense> Licenses => licenseProvider.Licenses;
 
     public string VersionString => $"v{versionProvider.ProductVersion}";
@@ -32,6 +26,12 @@ public class AboutViewModel : ViewModelBase
     public bool UpdateDetected => versionProvider.UpdateDetected;
 
     public string NewerVersionString => $"v{versionProvider.NewestVersion}";
+
+    private void VersionProviderOnNewerVersionDetected(object? o, EventArgs eventArgs)
+    {
+        OnPropertyChanged(nameof(NewerVersionString));
+        OnPropertyChanged(nameof(UpdateDetected));
+    }
 
     public void NavigateBack()
         => navigationService.NavigateBack();
