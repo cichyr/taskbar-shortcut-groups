@@ -21,12 +21,10 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore NuGet
-        run: |
-          dotnet restore TaskbarShortcutGroups.sln
+        run: dotnet restore
 
       - name: Build
-        run: |
-          dotnet publish TaskbarShortcutGroups.sln --no-restore -r ${{ matrix.architecture }} --self-contained ${{ matrix.self-contained }} -f net8.0-windows -c Release -p:PublishReadyToRun=true --nologo
+        run: dotnet publish TaskbarShortcutGroups.sln --no-restore -r ${{ matrix.architecture }} --self-contained ${{ matrix.self-contained }} -f net8.0-windows -c Release -p:PublishReadyToRun=true --nologo
 
       - name: Publish artifacts
         uses: actions/upload-artifact@v4
