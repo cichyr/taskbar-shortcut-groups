@@ -1,0 +1,33 @@
+name: Build
+on:
+  push:
+    branches: [ $default-branch ]
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        architecture: [win-x64, win-x86]
+        self-contained: [true, false]
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Prepare environment
+        uses: actions/setup-dotnet@v4
+        with: 
+          dotnet-version: 8.0.x
+
+      - name: Restore NuGet
+        run: |
+          dotnet restore TaskbarShortcutGroups.sln
+
+      - name: Build
+        run: |
+          dotnet publish TaskbarShortcutGroups.sln --no-restore -r ${{ matrix.architecture }} --self-contained ${{ matrix.self-contained }} -f net8.0-windows -c Release -p:PublishReadyToRun=true --nologo
+
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: TaskbarShortcutGroup
+          path: TaskbarShortcutGroups.AvaloniaUI\bin\Release\net8.0-windows\publish
