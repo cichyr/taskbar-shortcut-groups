@@ -7,6 +7,10 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        architecture: [win-x64, win-x86]
+        self-contained: [true, false]
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
@@ -16,38 +20,11 @@ jobs:
         with: 
           dotnet-version: 8.0.x
 
-      - name: Build win-x64 self-contained
-        run: dotnet publish TaskbarShortcutGroups.sln -r win-x64 --self-contained true -f net8.0-windows -c Release --nologo
+      - name: Build
+        run: dotnet publish TaskbarShortcutGroups.sln -r ${{ matrix.architecture }} --self-contained ${{ matrix.self-contained }} -f net8.0-windows -c Release --nologo
 
-      - name: Build win-x86 self-contained
-        run: dotnet publish TaskbarShortcutGroups.sln -r win-x86 --self-contained true -f net8.0-windows -c Release --nologo
-
-      - name: Publish artifacts x64-SC
+      - name: Publish artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: TaskbarShortcutGroup-x64-SC
-          path: TaskbarShortcutGroups.AvaloniaUI\bin\Release\net8.0-windows\win-x64\publish
-
-      - name: Publish artifacts x86-SC
-        uses: actions/upload-artifact@v4
-        with:
-          name: TaskbarShortcutGroup-x86-SC
-          path: TaskbarShortcutGroups.AvaloniaUI\bin\Release\net8.0-windows\win-x86\publish
-
-      - name: Build win-x64
-        run: dotnet publish TaskbarShortcutGroups.sln -r win-x64 --self-contained false -f net8.0-windows -c Release --nologo
-
-      - name: Build win-x86
-        run: dotnet publish TaskbarShortcutGroups.sln -r win-x86 --self-contained false -f net8.0-windows -c Release --nologo
-
-      - name: Publish artifacts x64
-        uses: actions/upload-artifact@v4
-        with:
-          name: TaskbarShortcutGroup-x64
-          path: TaskbarShortcutGroups.AvaloniaUI\bin\Release\net8.0-windows\win-x64\publish
-
-      - name: Publish artifacts x86
-        uses: actions/upload-artifact@v4
-        with:
-          name: TaskbarShortcutGroup-x86
-          path: TaskbarShortcutGroups.AvaloniaUI\bin\Release\net8.0-windows\win-x86\publish
+          name: TaskbarShortcutGroup
+          path: TaskbarShortcutGroups.AvaloniaUI\bin\Release\net8.0-windows\publish
