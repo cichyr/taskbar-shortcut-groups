@@ -24,14 +24,27 @@ From releases download desired .zip file and unzip it at any location.
 If you have .NET 8 runtime installed, you can download file ending with `nonSC` suffix.
 If you don't have it or are unsure if you have it - just use one with `SC` suffix.
 
+## Updating instructions
+
+Remove everything except the "Config" folder and install the new version in the same directory.
+
 ## How to use the app
+
+### TL;DR
+
+1. Press "Add new shortcut group" to create a new group.
+2. Set the name and icon for the group.
+3. Add shortcuts by pressing "Add new shortcut".
+4. Press "Save" and then "Back".
+5. Press "Open shortcuts location".
+6. Double click created shortcut
+7. Right-click on icon that shows up on the taskbar and press "Pin to taskbar". 
 
 ### Group list view
 
 After startup, you'll be presented with a list of shortcut groups.
 Here you can press any of the groups to edit them or "Add new shortcut group" to create a new group.
-You can also navigate to "About" view and open directory containing shortcuts to all visible groups using buttons on the
-bottom.
+You can also navigate to "About" view or open directory containing shortcuts to all visible groups using buttons on the bottom.
 Also from directory you can right-click the shortcut to pin it to taskbar.
 
 ### Group editor view

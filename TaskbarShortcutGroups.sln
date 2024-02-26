@@ -9,10 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskbarShortcutGroups.Commo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{ED616ADF-DD39-4D7D-A9F3-C26565E79914}"
 	ProjectSection(SolutionItems) = preProject
-		publish.ps1 = publish.ps1
 		.gitignore = .gitignore
 		global.json = global.json
 		README.md = README.md
+		Directory.Build.props = Directory.Build.props
+		.github\workflows\build.yml = .github\workflows\build.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskbarShortcutGroups.Windows", "TaskbarShortcutGroups.Windows\TaskbarShortcutGroups.Windows.csproj", "{1D3B9DBA-0E66-45DB-9AA3-BB38B57168C1}"
