@@ -43,6 +43,17 @@ public class ShortcutViewModel : ObservableObject
         }
     }
 
+    public int Order
+    {
+        get => innerObject.Order;
+        set
+        {
+            if (innerObject.Order == value) return;
+            innerObject.Order = value;
+            OnPropertyChanged();
+        }
+    }
+
     public Bitmap? Icon => innerObject.IconBitmap;
 
     public void RunAndStopApplication()

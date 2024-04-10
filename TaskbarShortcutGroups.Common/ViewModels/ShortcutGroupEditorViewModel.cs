@@ -19,6 +19,8 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
     private ICommand? removeGroup;
     private ICommand? removeShortcut;
     private ICommand? saveGroup;
+    private IRelayCommand<ShortcutViewModel>? moveUpCommand;
+    private IRelayCommand<ShortcutViewModel>? moveDownCommand;
 
     public ShortcutGroupEditorViewModel(INavigationService navigationService, IStateService stateService, IShortcutViewModelFactory shortcutFactory, IShortcutGroup shortcutGroup)
     {
@@ -61,6 +63,30 @@ public class ShortcutGroupEditorViewModel : ViewModelBase
         get => InnerObject.Name;
         set => InnerObject.Name = value;
     }
+
+    public IRelayCommand<ShortcutViewModel> MoveUpCommand => moveUpCommand ??= new RelayCommand<ShortcutViewModel>(
+        shortcut =>
+        {
+            if (shortcut == null) return;
+            var elementToSwap = Shortcuts[shortcut.Order - 1];
+            (elementToSwap.Order, shortcut.Order) = (shortcut.Order, elementToSwap.Order);
+            Shortcuts.Move(shortcut.Order, elementToSwap.Order);
+            MoveUpCommand.NotifyCanExecuteChanged();
+            MoveDownCommand.NotifyCanExecuteChanged();
+        },
+        shortcut => shortcut?.Order > 0);
+
+    public IRelayCommand<ShortcutViewModel> MoveDownCommand => moveDownCommand ??= new RelayCommand<ShortcutViewModel>(
+        shortcut =>
+        {
+            if (shortcut == null) return;
+            var elementToSwap = Shortcuts[shortcut.Order + 1];
+            (elementToSwap.Order, shortcut.Order) = (shortcut.Order, elementToSwap.Order);
+            Shortcuts.Move(shortcut.Order, elementToSwap.Order);
+            MoveUpCommand.NotifyCanExecuteChanged();
+            MoveDownCommand.NotifyCanExecuteChanged();
+        },
+        shortcut => shortcut?.Order < Shortcuts.Count - 1);
 
     public ICommand SaveGroup => saveGroup ??= new RelayCommand(() =>
     {

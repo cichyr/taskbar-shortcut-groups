@@ -41,11 +41,28 @@
                                 <TextBlock Margin="10,0,0,0" Text="{Binding Name}" ToolTip.Tip="{Binding Path}"
                                            VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <Button DockPanel.Dock="Right"
+                                        Margin="10,0,0,0"
                                         Command="{Binding $parent[ItemsControl].((viewModels:ShortcutGroupEditorViewModel)DataContext).RemoveShortcut}"
                                         CommandParameter="{Binding}"
                                         Width="40" Height="40"
                                         HorizontalAlignment="Right">
                                     <ui:SymbolIcon Symbol="Delete" FontSize="24" />
+                                </Button>
+                                <Button DockPanel.Dock="Right"
+                                        Margin="10,0,0,0"
+                                        Command="{Binding $parent[ItemsControl].((viewModels:ShortcutGroupEditorViewModel)DataContext).MoveDownCommand}"
+                                        CommandParameter="{Binding}"
+                                        Width="40" Height="40"
+                                        HorizontalAlignment="Right">
+                                    <ui:SymbolIcon Symbol="ChevronDown" FontSize="24" />
+                                </Button>
+                                <Button DockPanel.Dock="Right"
+                                        Margin="10,0,0,0"
+                                        Command="{Binding $parent[ItemsControl].((viewModels:ShortcutGroupEditorViewModel)DataContext).MoveUpCommand}"
+                                        CommandParameter="{Binding}"
+                                        Width="40" Height="40"
+                                        HorizontalAlignment="Right">
+                                    <ui:SymbolIcon Symbol="ChevronUp" FontSize="24" />
                                 </Button>
                             </DockPanel>
                         </DataTemplate>

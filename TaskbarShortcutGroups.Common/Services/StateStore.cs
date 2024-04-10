@@ -54,13 +54,14 @@ public class StateStore : IStateStore
         var shortcutGroupsDefinition = JsonSerializer.Deserialize(reader.BaseStream, SourceGenerationContext.Default.ShortcutGroupsDefinition);
 
         return shortcutGroupsDefinition?.ShortcutGroups
-            .Select(sgd => new ShortcutGroup
+            .Select(definition => new ShortcutGroup
             {
-                Name = sgd.Name,
-                IconPath = sgd.IconPath,
-                Shortcuts = sgd.Shortcuts
+                Name = definition.Name,
+                IconPath = definition.IconPath,
+                Shortcuts = definition.Shortcuts
                     .Select(CreateShortcut)
                     .OrderBy(s => s.Order)
+                    .Select(NormalizeOrder)
                     .ToHashSet()
             })
             .OrderBy(sg => sg.Order);
@@ -70,6 +71,12 @@ public class StateStore : IStateStore
     {
         var shortcut = shortcutFactory.Create(shortcutDefinition.FilePath);
         shortcut.Order = shortcutDefinition.Order;
+        return shortcut;
+    }
+
+    private static IShortcut NormalizeOrder(IShortcut shortcut, int index)
+    {
+        shortcut.Order = index;
         return shortcut;
     }
 }
