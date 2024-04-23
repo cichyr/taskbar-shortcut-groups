@@ -3,7 +3,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using DryIoc;
+// using DryIoc;
 using TaskbarShortcutGroups.AvaloniaUI.Services;
 using TaskbarShortcutGroups.AvaloniaUI.Views;
 using TaskbarShortcutGroups.Common.IoC.Factories;
@@ -16,10 +16,14 @@ using TaskbarShortcutGroups.Windows.Services;
 
 namespace TaskbarShortcutGroups.AvaloniaUI;
 
+partial class Composition{}
+
 public class App : Application
 {
-    public static IContainer IoCContainer { get; } = new Container();
-
+    internal static Composition IoCContainer { get; } = new();
+    
+    // public static IContainer IoCContainer { get; } = new Container();
+    
     public override void Initialize()
         => AvaloniaXamlLoader.Load(this);
 
@@ -29,34 +33,32 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static void PerformExtendedIoCSetup()
-    {
-        IoCContainer.RegisterMany<NavigationService>(Reuse.Singleton);
-        IoCContainer.Register<ITaskService, TaskService>(Reuse.Singleton);
-        IoCContainer.Register<IVersionProvider, VersionProvider>(Reuse.Singleton);
-        IoCContainer.Register<IDialogService, DialogService>(Reuse.Singleton);
-        IoCContainer.Register<ILicenseProvider, LicenseProvider>(Reuse.Singleton);
-        IoCContainer.Register<IStateService, StateService>(Reuse.Singleton);
-        IoCContainer.Register<AboutViewModel>(Reuse.Singleton);
-        IoCContainer.Register<ShortcutGroupListViewModel>(Reuse.Singleton);
-        IoCContainer.Register<IShortcutGroupEditorViewModelFactory, ShortcutGroupEditorViewModelFactory>(Reuse.Singleton);
-        IoCContainer.Register<IShortcutGroupFactory, ShortcutGroupFactory>(Reuse.Singleton);
-    }
+    // private static void PerformExtendedIoCSetup()
+    // {
+    //     IoCContainer.RegisterMany<NavigationService>(Reuse.Singleton);
+    //     IoCContainer.Register<ITaskService, TaskService>(Reuse.Singleton);
+    //     IoCContainer.Register<IVersionProvider, VersionProvider>(Reuse.Singleton);
+    //     IoCContainer.Register<IDialogService, DialogService>(Reuse.Singleton);
+    //     IoCContainer.Register<ILicenseProvider, LicenseProvider>(Reuse.Singleton);
+    //     IoCContainer.Register<IStateService, StateService>(Reuse.Singleton);
+    //     IoCContainer.Register<AboutViewModel>(Reuse.Singleton);
+    //     IoCContainer.Register<ShortcutGroupListViewModel>(Reuse.Singleton);
+    //     IoCContainer.Register<IShortcutGroupEditorViewModelFactory, ShortcutGroupEditorViewModelFactory>(Reuse.Singleton);
+    //     IoCContainer.Register<IShortcutGroupFactory, ShortcutGroupFactory>(Reuse.Singleton);
+    // }
 
-    private static void PerformBasicIoCSetup()
-    {
-        IoCContainer.Register<IShortcutFactory, ShortcutFactory>(Reuse.Singleton);
-        IoCContainer.Register<IStateStore, StateStore>(Reuse.Singleton);
-        IoCContainer.Register<IStateProvider, StateProvider>(Reuse.Singleton);
-        IoCContainer.Register<IOsService, OsService>(Reuse.Singleton);
-        IoCContainer.Register<IShortcutViewModelFactory, ShortcutViewModelFactory>(Reuse.Singleton);
-        IoCContainer.Register<ShortcutGroupViewModel>(Reuse.Singleton);
-    }
+    // private static void PerformBasicIoCSetup()
+    // {
+    //     IoCContainer.Register<IShortcutFactory, ShortcutFactory>(Reuse.Singleton);
+    //     IoCContainer.Register<IStateStore, StateStore>(Reuse.Singleton);
+    //     IoCContainer.Register<IStateProvider, StateProvider>(Reuse.Singleton);
+    //     IoCContainer.Register<IOsService, OsService>(Reuse.Singleton);
+    //     IoCContainer.Register<IShortcutViewModelFactory, ShortcutViewModelFactory>(Reuse.Singleton);
+    //     IoCContainer.Register<ShortcutGroupViewModel>(Reuse.Singleton);
+    // }
 
     private static void SetupMainWindow(IApplicationLifetime? lifetime)
     {
-        PerformBasicIoCSetup();
-
         switch (lifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
@@ -89,7 +91,7 @@ public class App : Application
                     }
                 }
 
-                PerformExtendedIoCSetup();
+                // PerformExtendedIoCSetup();
                 var navigationService = IoCContainer.Resolve<IAvaloniaNavigationService>();
                 var groupListViewModel = IoCContainer.Resolve<ShortcutGroupListViewModel>();
                 desktop.MainWindow = new MainWindow();

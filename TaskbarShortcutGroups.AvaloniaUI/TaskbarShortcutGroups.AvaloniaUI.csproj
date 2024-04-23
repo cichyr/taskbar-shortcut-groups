@@ -30,11 +30,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.6"/>
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.6"/>
+        <PackageReference Include="Avalonia" Version="11.0.10"/>
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.10.4"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.10"/>
+<!--        <PackageReference Include="DryIoc.dll" Version="5.4.3"/>-->
+        <PackageReference Include="Pure.DI" Version="2.1.8">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Include="DryIoc.dll" Version="5.4.3"/>
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10"/>
         <PackageReference Include="FluentAvaloniaUI" Version="2.0.4"/>
     </ItemGroup>
 

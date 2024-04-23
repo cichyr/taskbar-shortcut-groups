@@ -1,6 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
-using DryIoc;
+// using DryIoc;
 using TaskbarShortcutGroups.Common.Services;
 
 namespace TaskbarShortcutGroups.AvaloniaUI.Views;
