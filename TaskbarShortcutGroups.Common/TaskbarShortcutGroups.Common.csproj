@@ -7,6 +7,7 @@
         <AssemblyName>TaskbarShortcutGroups.Common</AssemblyName>
         <RootNamespace>TaskbarShortcutGroups.Common</RootNamespace>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <ItemGroup>

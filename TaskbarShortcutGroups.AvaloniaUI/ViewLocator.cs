@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using TaskbarShortcutGroups.AvaloniaUI.Views;
 using TaskbarShortcutGroups.Common.ViewModels;
 
 namespace TaskbarShortcutGroups.AvaloniaUI;
@@ -16,9 +17,16 @@ public class ViewLocator : IDataTemplate
         var name = data.GetType().FullName!.Split("ViewModels").Last().Replace("ViewModel", "View");
         var fullyQualifiedViewName = $"{ViewsNamespace}{name}";
         var type = Type.GetType(fullyQualifiedViewName);
-        return type != null
-            ? (Control)Activator.CreateInstance(type)!
-            : new TextBlock {Text = "Not Found: " + name};
+        return type == null
+            ? new TextBlock {Text = "Not Found: " + name}
+            : type.Name switch
+            {
+                nameof(AboutView) => Activator.CreateInstance<AboutView>(),
+                nameof(ShortcutGroupEditorView) => Activator.CreateInstance<ShortcutGroupEditorView>(),
+                nameof(ShortcutGroupListView) => Activator.CreateInstance<ShortcutGroupListView>(),
+                nameof(ShortcutGroupView) => Activator.CreateInstance<ShortcutGroupView>(),
+                _ => new TextBlock {Text = "Not Found: " + name},
+            };
     }
 
     public bool Match(object? data)
