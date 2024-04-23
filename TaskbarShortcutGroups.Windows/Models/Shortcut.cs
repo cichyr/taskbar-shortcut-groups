@@ -9,10 +9,10 @@ using TaskbarShortcutGroups.Common.Models;
 
 namespace TaskbarShortcutGroups.Windows.Models;
 
-public class Shortcut : IShortcut
+public unsafe class Shortcut : IShortcut
 {
     private Bitmap? iconBitmap;
-    private IShellLinkW? shellLink;
+    private IShellLinkW* shellLink = null;
 
     /// <summary>
     /// Creates a new instance of <see cref="Shortcut" />.
@@ -36,18 +36,30 @@ public class Shortcut : IShortcut
     /// <summary>
     /// Gets the shell link.
     /// </summary>
-    private unsafe IShellLinkW ShellLink
+    private IShellLinkW* ShellLink
     {
         get
         {
             if (shellLink != null)
                 return shellLink;
 
-            shellLink = (IShellLinkW)new ShellLink();
+            // shellLink = (IShellLinkW)new ShellLink();
+            var hres = PInvoke.CoInitialize();
+            
+            hres = PInvoke.CoCreateInstance<IShellLinkW>(typeof(ShellLink).GUID, default, CLSCTX.CLSCTX_INPROC_SERVER, out var psl);
+            if (hres.Succeeded)
+                shellLink = psl;
+            
             if (File.Exists(Location))
                 fixed (char* pszFileName = Location)
                 {
-                    ((IPersistFile)shellLink).Load(pszFileName, STGM.STGM_READ);
+                    hres = psl->QueryInterface(IPersistFile.IID_Guid, out var ppvObject);
+                    if (hres.Succeeded)
+                    {
+                        var ppf = (IPersistFile*)ppvObject;
+                        ppf->Load(pszFileName, STGM.STGM_READ);
+                        ppf->Release();
+                    }
                 }
 
             return shellLink;
@@ -61,13 +73,13 @@ public class Shortcut : IShortcut
     public string Location { get; set; }
 
     /// <inheritdoc />
-    public unsafe string ExecutablePath
+    public string ExecutablePath
     {
         get
         {
             fixed (char* pszFile = new char[(int)PInvoke.MAX_PATH])
             {
-                ShellLink.GetPath(pszFile, (int)PInvoke.MAX_PATH, null, (uint)SLGP_FLAGS.SLGP_RAWPATH);
+                ShellLink->GetPath(pszFile, (int)PInvoke.MAX_PATH, null, (uint)SLGP_FLAGS.SLGP_RAWPATH);
                 return new string(pszFile);
             }
         }
@@ -75,7 +87,7 @@ public class Shortcut : IShortcut
         {
             if (value.Length > PInvoke.MAX_PATH)
                 throw new ArgumentException("The length of the new path should not exceed 260.");
-            ShellLink.SetPath(value);
+            ShellLink->SetPath(value);
         }
     }
 
@@ -84,7 +96,7 @@ public class Shortcut : IShortcut
     {
         get
         {
-            ShellLink.GetShowCmd(out var cmdShow);
+            ShellLink->GetShowCmd(out var cmdShow);
             return cmdShow switch
             {
                 SHOW_WINDOW_CMD.SW_HIDE => ProcessWindowStyle.Hidden,
@@ -105,18 +117,18 @@ public class Shortcut : IShortcut
                 _ => throw new ArgumentException("Unsupported value")
             };
 
-            ShellLink.SetShowCmd(cmdShow);
+            ShellLink->SetShowCmd(cmdShow);
         }
     }
 
     /// <inheritdoc />
-    public unsafe string WorkingDirectory
+    public string WorkingDirectory
     {
         get
         {
             fixed (char* pszDir = new char[(int)PInvoke.MAX_PATH])
             {
-                ShellLink.GetWorkingDirectory(pszDir, 260);
+                ShellLink->GetWorkingDirectory(pszDir, 260);
                 return new string(pszDir);
             }
         }
@@ -124,18 +136,18 @@ public class Shortcut : IShortcut
         {
             if (value.Length > 260)
                 throw new ArgumentException("The length of the new working directory path should not exceed 260.");
-            ShellLink.SetWorkingDirectory(value);
+            ShellLink->SetWorkingDirectory(value);
         }
     }
 
     /// <inheritdoc />
-    public unsafe string Arguments
+    public string Arguments
     {
         get
         {
             fixed (char* pszArgs = new char[1024])
             {
-                ShellLink.GetArguments(pszArgs, 1024);
+                ShellLink->GetArguments(pszArgs, 1024);
                 return new string(pszArgs);
             }
         }
@@ -143,12 +155,12 @@ public class Shortcut : IShortcut
         {
             if (value.Length > 1024)
                 throw new ArgumentException("The length of the new arguments should not exceed 1024.");
-            ShellLink.SetArguments(value);
+            ShellLink->SetArguments(value);
         }
     }
 
     /// <inheritdoc />
-    public unsafe IconLocation? IconLocation
+    public IconLocation? IconLocation
     {
         get
         {
@@ -156,7 +168,7 @@ public class Shortcut : IShortcut
             int piIcon;
             fixed (char* pszIconPath = new char[(int)PInvoke.MAX_PATH])
             {
-                ShellLink.GetIconLocation(pszIconPath, (int)PInvoke.MAX_PATH, out piIcon);
+                ShellLink->GetIconLocation(pszIconPath, (int)PInvoke.MAX_PATH, out piIcon);
                 iconPath = new string(pszIconPath);
             }
 
@@ -169,7 +181,7 @@ public class Shortcut : IShortcut
             ExceptionExtensions.ThrowIfNull(value);
             if (value.FilePath.Length > 260)
                 throw new ArgumentException("The length of the path to a new icon should not exceed 260.");
-            ShellLink.SetIconLocation(value.FilePath, value.Address);
+            ShellLink->SetIconLocation(value.FilePath, value.Address);
         }
     }
 
@@ -202,11 +214,14 @@ public class Shortcut : IShortcut
     /// </summary>
     /// <param name="path"> The path to the saving directory. </param>
     public void Save(string path)
-        => (ShellLink as IPersistFile).Save(Path.Combine(path, $"{Name}.lnk"), false);
+    {
+        // (ShellLink as IPersistFile).Save(Path.Combine(path, $"{Name}.lnk"), false);
+    }
 
     /// <inheritdoc />
     public void Dispose()
     {
+        PInvoke.CoUninitialize();
         iconBitmap?.Dispose();
         GC.SuppressFinalize(this);
     }

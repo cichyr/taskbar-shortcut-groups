@@ -9,3 +9,6 @@ ExtractIconExA
 ExtractIconExW
 GetCursorPos
 GetCursor
+CoCreateInstance
+CoInitialize
+CoUninitialize
