@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyName>TaskbarShortcutGroups.AvaloniaUI</AssemblyName>
+        <AssemblyName>TaskbarShortcutGroups</AssemblyName>
         <RootNamespace>TaskbarShortcutGroups.AvaloniaUI</RootNamespace>
-        <OutputType Condition="'$(Configuration)' == 'Debug'">Exe</OutputType>
         <OutputType Condition="'$(Configuration)' != 'Debug'">WinExe</OutputType>
-        <PublishReadyToRun>true</PublishReadyToRun>
+        <OutputType Condition="'$(Configuration)' == 'Debug'">Exe</OutputType>
         <Nullable>enable</Nullable>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <PublishAot>true</PublishAot>
+        <PublishReadyToRun>true</PublishReadyToRun>
         <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <PropertyGroup>
+        <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
         <Authors>CichyR</Authors>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <PackageId>TaskbarShortcutGroups</PackageId>
