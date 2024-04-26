@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Avalonia;
 using Pure.DI;
 using TaskbarShortcutGroups.AvaloniaUI.Services;
 using TaskbarShortcutGroups.Common.IoC.Factories;
@@ -14,7 +15,7 @@ using static Pure.DI.Lifetime;
 
 namespace TaskbarShortcutGroups.AvaloniaUI;
 
-internal class Program
+internal static class Program
 {
     [STAThread]
     public static void Main(string[] args)
@@ -25,15 +26,14 @@ internal class Program
     [SuppressMessage("ReSharper", "UnusedMember.Local", Justification = "Needed only for compilation")]
     [SuppressMessage("ReSharper", "UnusedParameter.Local", Justification = "PureDI requires this parameter")]
     private static void SetupPureDI()
-    {
-        DI.Setup("Composition")
+        => DI.Setup("Composition")
             .RootBind<IShortcutFactory>().As(Singleton).To<ShortcutFactory>()
             .RootBind<IStateStore>().As(Singleton).To<StateStore>()
             .RootBind<IStateProvider>().As(Singleton).To<StateProvider>()
             .RootBind<IOsService>().As(Singleton).To<OsService>()
             .RootBind<IShortcutViewModelFactory>().As(Singleton).To<ShortcutViewModelFactory>()
             .Bind<INavigationService, IAvaloniaNavigationService>().As(Singleton).To<NavigationService>()
-                .Root<INavigationService>().Root<IAvaloniaNavigationService>()
+            .Root<INavigationService>().Root<IAvaloniaNavigationService>()
             .RootBind<ITaskService>().As(Singleton).To<TaskService>()
             .RootBind<IVersionProvider>().As(Singleton).To<VersionProvider>()
             .RootBind<IDialogService>().As(Singleton).To<DialogService>()
@@ -50,14 +50,11 @@ internal class Program
                     ctx.Inject<ShortcutGroupViewModel>(out var shortcutGroupViewModel);
                     return shortcutGroupViewModel;
                 });
-    }
-    
+
     [STAThread]
     private static void StartApp(string[] args)
-    {
-        var appBuilder = Avalonia.AppBuilder.Configure<App>();
-        Avalonia.AppBuilderDesktopExtensions.UsePlatformDetect(appBuilder);
-        Avalonia.LoggingExtensions.LogToTrace(appBuilder);
-        Avalonia.ClassicDesktopStyleApplicationLifetimeExtensions.StartWithClassicDesktopLifetime(appBuilder, args);
-    }
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .LogToTrace()
+            .StartWithClassicDesktopLifetime(args);
 }
