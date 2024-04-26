@@ -19,9 +19,8 @@ For me, it was a huge issue with Taskbar Groups.
 
 ## Installation instructions
 
-From releases download desired .zip file and unzip it at any location.
-`Win-x64` zip is for 64bit Windows, while `win-x86` one is for 32bit Windows.
-There is no Linux or MacOS support.
+Requirements: 64-bit Windows. There is no Linux or MacOS support.
+From releases download .zip file and unzip it at any location.
 
 ## Updating instructions
 
