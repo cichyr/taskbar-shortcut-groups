@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using Windows.Win32;
 using Windows.Win32.System.Com;
@@ -34,8 +35,9 @@ public unsafe class Shortcut : IShortcut
     }
 
     /// <summary>
-    /// Gets the shell link.
+    /// Gets the pointer to the shell link.
     /// </summary>
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native COM/Shell/Win32/PInvoke naming")]
     private IShellLinkW* ShellLink
     {
         get
@@ -43,23 +45,20 @@ public unsafe class Shortcut : IShortcut
             if (shellLink != null)
                 return shellLink;
 
-            // shellLink = (IShellLinkW)new ShellLink();
             var hres = PInvoke.CoInitialize();
-            
-            hres = PInvoke.CoCreateInstance<IShellLinkW>(typeof(ShellLink).GUID, default, CLSCTX.CLSCTX_INPROC_SERVER, out var psl);
-            if (hres.Succeeded)
-                shellLink = psl;
-            
+            if (hres.Failed)
+                throw new InvalidOperationException($"Failed to initialize COM context with failure code '{hres.Value}'");
+
+            hres = PInvoke.CoCreateInstance(typeof(ShellLink).GUID, default, CLSCTX.CLSCTX_INPROC_SERVER, out shellLink);
+            if (hres.Failed)
+                throw new InvalidOperationException($"Failed to create shell link with failure code '{hres.Value}'");
+
             if (File.Exists(Location))
                 fixed (char* pszFileName = Location)
                 {
-                    hres = psl->QueryInterface(IPersistFile.IID_Guid, out var ppvObject);
-                    if (hres.Succeeded)
-                    {
-                        var ppf = (IPersistFile*)ppvObject;
-                        ppf->Load(pszFileName, STGM.STGM_READ);
-                        ppf->Release();
-                    }
+                    var persistFile = GetPersistFile();
+                    persistFile->Load(pszFileName, STGM.STGM_READ);
+                    persistFile->Release();
                 }
 
             return shellLink;
@@ -73,6 +72,7 @@ public unsafe class Shortcut : IShortcut
     public string Location { get; set; }
 
     /// <inheritdoc />
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
     public string ExecutablePath
     {
         get
@@ -122,6 +122,7 @@ public unsafe class Shortcut : IShortcut
     }
 
     /// <inheritdoc />
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
     public string WorkingDirectory
     {
         get
@@ -141,6 +142,7 @@ public unsafe class Shortcut : IShortcut
     }
 
     /// <inheritdoc />
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
     public string Arguments
     {
         get
@@ -160,6 +162,7 @@ public unsafe class Shortcut : IShortcut
     }
 
     /// <inheritdoc />
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
     public IconLocation? IconLocation
     {
         get
@@ -213,9 +216,12 @@ public unsafe class Shortcut : IShortcut
     /// Saves the shortcut in provided path.
     /// </summary>
     /// <param name="path"> The path to the saving directory. </param>
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
     public void Save(string path)
     {
-        // (ShellLink as IPersistFile).Save(Path.Combine(path, $"{Name}.lnk"), false);
+        var persistFile = GetPersistFile();
+        persistFile->Save(Path.Combine(path, $"{Name}.lnk"), true);
+        persistFile->Release();
     }
 
     /// <inheritdoc />
@@ -224,5 +230,19 @@ public unsafe class Shortcut : IShortcut
         PInvoke.CoUninitialize();
         iconBitmap?.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Queries the current <see cref="ShellLink" /> for <see cref="IPersistFile" /> interface and returns it.
+    /// </summary>
+    /// <remarks> Don't forget to call <see cref="IUnknown.Release" /> when you're done using it. </remarks>
+    /// <exception cref="InvalidOperationException"> When querying <see cref="ShellLink" /> fails. </exception>
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native COM/Shell/Win32/PInvoke naming")]
+    private IPersistFile* GetPersistFile()
+    {
+        var hres = ShellLink->QueryInterface(IPersistFile.IID_Guid, out var ppvObject);
+        if (!hres.Succeeded)
+            throw new InvalidOperationException($"Failed to convert shell link to persistence file with failure code '{hres.Value}'");
+        return (IPersistFile*)ppvObject;
     }
 }
