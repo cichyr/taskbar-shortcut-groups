@@ -1,16 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyName>TaskbarShortcutGroups.AvaloniaUI</AssemblyName>
+        <AssemblyName>TaskbarShortcutGroups</AssemblyName>
         <RootNamespace>TaskbarShortcutGroups.AvaloniaUI</RootNamespace>
-        <OutputType Condition="'$(Configuration)' == 'Debug'">Exe</OutputType>
         <OutputType Condition="'$(Configuration)' != 'Debug'">WinExe</OutputType>
-        <PublishReadyToRun>true</PublishReadyToRun>
+        <OutputType Condition="'$(Configuration)' == 'Debug'">Exe</OutputType>
         <Nullable>enable</Nullable>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <PublishAot>true</PublishAot>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <PropertyGroup>
+        <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
         <Authors>CichyR</Authors>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <PackageId>TaskbarShortcutGroups</PackageId>
@@ -30,12 +34,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.6"/>
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.6"/>
+        <PackageReference Include="Avalonia" Version="11.0.10"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.10"/>
+        <PackageReference Include="Pure.DI" Version="2.1.11">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Include="DryIoc.dll" Version="5.4.3"/>
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6"/>
-        <PackageReference Include="FluentAvaloniaUI" Version="2.0.4"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10"/>
+        <PackageReference Include="FluentAvaloniaUI" Version="2.0.5"/>
     </ItemGroup>
 
     <ItemGroup>

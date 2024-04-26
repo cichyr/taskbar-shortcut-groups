@@ -7,11 +7,12 @@
         <AssemblyName>TaskbarShortcutGroups.Common</AssemblyName>
         <RootNamespace>TaskbarShortcutGroups.Common</RootNamespace>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2"/>
-        <PackageReference Include="System.Drawing.Common" Version="8.0.0"/>
+        <PackageReference Include="System.Drawing.Common" Version="8.0.4" />
     </ItemGroup>
 
 </Project>

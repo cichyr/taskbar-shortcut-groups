@@ -21,8 +21,7 @@ For me, it was a huge issue with Taskbar Groups.
 
 From releases download desired .zip file and unzip it at any location.
 `Win-x64` zip is for 64bit Windows, while `win-x86` one is for 32bit Windows.
-If you have .NET 8 runtime installed, you can download file ending with `nonSC` suffix.
-If you don't have it or are unsure if you have it - just use one with `SC` suffix.
+There is no Linux or MacOS support.
 
 ## Updating instructions
 

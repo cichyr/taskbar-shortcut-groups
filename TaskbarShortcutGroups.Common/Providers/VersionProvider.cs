@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Reflection;
 using System.Text.Json;
 using TaskbarShortcutGroups.Common.Models.Serialization;
 using TaskbarShortcutGroups.Common.Services;
@@ -19,7 +18,7 @@ public class VersionProvider : IVersionProvider
         taskService.RegisterTask(Task.Run(() => FetchReleaseVersion(cancellationTokenSource.Token), CancellationToken.None), cancellationTokenSource);
     }
 
-    private FileVersionInfo VersionInfo => versionInfo ??= FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly()!.Location);
+    private FileVersionInfo VersionInfo => versionInfo ??= FileVersionInfo.GetVersionInfo(Environment.ProcessPath!);
 
     public bool UpdateDetected => updatedVersion != null;
 

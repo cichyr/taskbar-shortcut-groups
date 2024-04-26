@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using Windows.Win32;
 using Windows.Win32.System.Com;
@@ -9,10 +10,10 @@ using TaskbarShortcutGroups.Common.Models;
 
 namespace TaskbarShortcutGroups.Windows.Models;
 
-public class Shortcut : IShortcut
+public unsafe class Shortcut : IShortcut
 {
     private Bitmap? iconBitmap;
-    private IShellLinkW? shellLink;
+    private IShellLinkW* shellLink = null;
 
     /// <summary>
     /// Creates a new instance of <see cref="Shortcut" />.
@@ -34,20 +35,30 @@ public class Shortcut : IShortcut
     }
 
     /// <summary>
-    /// Gets the shell link.
+    /// Gets the pointer to the shell link.
     /// </summary>
-    private unsafe IShellLinkW ShellLink
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native COM/Shell/Win32/PInvoke naming")]
+    private IShellLinkW* ShellLink
     {
         get
         {
             if (shellLink != null)
                 return shellLink;
 
-            shellLink = (IShellLinkW)new ShellLink();
+            var hres = PInvoke.CoInitialize();
+            if (hres.Failed)
+                throw new InvalidOperationException($"Failed to initialize COM context with failure code '{hres.Value}'");
+
+            hres = PInvoke.CoCreateInstance(typeof(ShellLink).GUID, default, CLSCTX.CLSCTX_INPROC_SERVER, out shellLink);
+            if (hres.Failed)
+                throw new InvalidOperationException($"Failed to create shell link with failure code '{hres.Value}'");
+
             if (File.Exists(Location))
                 fixed (char* pszFileName = Location)
                 {
-                    ((IPersistFile)shellLink).Load(pszFileName, STGM.STGM_READ);
+                    var persistFile = GetPersistFile();
+                    persistFile->Load(pszFileName, STGM.STGM_READ);
+                    persistFile->Release();
                 }
 
             return shellLink;
@@ -61,13 +72,14 @@ public class Shortcut : IShortcut
     public string Location { get; set; }
 
     /// <inheritdoc />
-    public unsafe string ExecutablePath
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
+    public string ExecutablePath
     {
         get
         {
             fixed (char* pszFile = new char[(int)PInvoke.MAX_PATH])
             {
-                ShellLink.GetPath(pszFile, (int)PInvoke.MAX_PATH, null, (uint)SLGP_FLAGS.SLGP_RAWPATH);
+                ShellLink->GetPath(pszFile, (int)PInvoke.MAX_PATH, null, (uint)SLGP_FLAGS.SLGP_RAWPATH);
                 return new string(pszFile);
             }
         }
@@ -75,7 +87,7 @@ public class Shortcut : IShortcut
         {
             if (value.Length > PInvoke.MAX_PATH)
                 throw new ArgumentException("The length of the new path should not exceed 260.");
-            ShellLink.SetPath(value);
+            ShellLink->SetPath(value);
         }
     }
 
@@ -84,7 +96,7 @@ public class Shortcut : IShortcut
     {
         get
         {
-            ShellLink.GetShowCmd(out var cmdShow);
+            ShellLink->GetShowCmd(out var cmdShow);
             return cmdShow switch
             {
                 SHOW_WINDOW_CMD.SW_HIDE => ProcessWindowStyle.Hidden,
@@ -105,18 +117,19 @@ public class Shortcut : IShortcut
                 _ => throw new ArgumentException("Unsupported value")
             };
 
-            ShellLink.SetShowCmd(cmdShow);
+            ShellLink->SetShowCmd(cmdShow);
         }
     }
 
     /// <inheritdoc />
-    public unsafe string WorkingDirectory
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
+    public string WorkingDirectory
     {
         get
         {
             fixed (char* pszDir = new char[(int)PInvoke.MAX_PATH])
             {
-                ShellLink.GetWorkingDirectory(pszDir, 260);
+                ShellLink->GetWorkingDirectory(pszDir, 260);
                 return new string(pszDir);
             }
         }
@@ -124,18 +137,19 @@ public class Shortcut : IShortcut
         {
             if (value.Length > 260)
                 throw new ArgumentException("The length of the new working directory path should not exceed 260.");
-            ShellLink.SetWorkingDirectory(value);
+            ShellLink->SetWorkingDirectory(value);
         }
     }
 
     /// <inheritdoc />
-    public unsafe string Arguments
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
+    public string Arguments
     {
         get
         {
             fixed (char* pszArgs = new char[1024])
             {
-                ShellLink.GetArguments(pszArgs, 1024);
+                ShellLink->GetArguments(pszArgs, 1024);
                 return new string(pszArgs);
             }
         }
@@ -143,12 +157,13 @@ public class Shortcut : IShortcut
         {
             if (value.Length > 1024)
                 throw new ArgumentException("The length of the new arguments should not exceed 1024.");
-            ShellLink.SetArguments(value);
+            ShellLink->SetArguments(value);
         }
     }
 
     /// <inheritdoc />
-    public unsafe IconLocation? IconLocation
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
+    public IconLocation? IconLocation
     {
         get
         {
@@ -156,7 +171,7 @@ public class Shortcut : IShortcut
             int piIcon;
             fixed (char* pszIconPath = new char[(int)PInvoke.MAX_PATH])
             {
-                ShellLink.GetIconLocation(pszIconPath, (int)PInvoke.MAX_PATH, out piIcon);
+                ShellLink->GetIconLocation(pszIconPath, (int)PInvoke.MAX_PATH, out piIcon);
                 iconPath = new string(pszIconPath);
             }
 
@@ -169,7 +184,7 @@ public class Shortcut : IShortcut
             ExceptionExtensions.ThrowIfNull(value);
             if (value.FilePath.Length > 260)
                 throw new ArgumentException("The length of the path to a new icon should not exceed 260.");
-            ShellLink.SetIconLocation(value.FilePath, value.Address);
+            ShellLink->SetIconLocation(value.FilePath, value.Address);
         }
     }
 
@@ -201,13 +216,33 @@ public class Shortcut : IShortcut
     /// Saves the shortcut in provided path.
     /// </summary>
     /// <param name="path"> The path to the saving directory. </param>
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native win32 shell naming")]
     public void Save(string path)
-        => (ShellLink as IPersistFile).Save(Path.Combine(path, $"{Name}.lnk"), false);
+    {
+        var persistFile = GetPersistFile();
+        persistFile->Save(Path.Combine(path, $"{Name}.lnk"), true);
+        persistFile->Release();
+    }
 
     /// <inheritdoc />
     public void Dispose()
     {
+        PInvoke.CoUninitialize();
         iconBitmap?.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Queries the current <see cref="ShellLink" /> for <see cref="IPersistFile" /> interface and returns it.
+    /// </summary>
+    /// <remarks> Don't forget to call <see cref="IUnknown.Release" /> when you're done using it. </remarks>
+    /// <exception cref="InvalidOperationException"> When querying <see cref="ShellLink" /> fails. </exception>
+    [SuppressMessage("ReSharper", "IdentifierTypo", Justification = "Used native COM/Shell/Win32/PInvoke naming")]
+    private IPersistFile* GetPersistFile()
+    {
+        var hres = ShellLink->QueryInterface(IPersistFile.IID_Guid, out var ppvObject);
+        if (!hres.Succeeded)
+            throw new InvalidOperationException($"Failed to convert shell link to persistence file with failure code '{hres.Value}'");
+        return (IPersistFile*)ppvObject;
     }
 }
