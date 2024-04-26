@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using Pure.DI;
 using TaskbarShortcutGroups.AvaloniaUI.Services;
 using TaskbarShortcutGroups.Common.IoC.Factories;
@@ -19,19 +16,14 @@ namespace TaskbarShortcutGroups.AvaloniaUI;
 
 internal class Program
 {
-    [Obsolete]
-    private static string AssembliesPath { get; } = @$"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? string.Empty}\Assemblies\";
-
     [STAThread]
     public static void Main(string[] args)
-    {
-        // AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        StartApp(args);
-    }
-    
+        => StartApp(args);
+
     [Conditional("DI")]
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "PureDI is given name")]
     [SuppressMessage("ReSharper", "UnusedMember.Local", Justification = "Needed only for compilation")]
+    [SuppressMessage("ReSharper", "UnusedParameter.Local", Justification = "PureDI requires this parameter")]
     private static void SetupPureDI()
     {
         DI.Setup("Composition")
@@ -40,7 +32,6 @@ internal class Program
             .RootBind<IStateProvider>().As(Singleton).To<StateProvider>()
             .RootBind<IOsService>().As(Singleton).To<OsService>()
             .RootBind<IShortcutViewModelFactory>().As(Singleton).To<ShortcutViewModelFactory>()
-            // .RootBind<ShortcutGroupViewModel>().As(Singleton).To<ShortcutGroupViewModel>()
             .Bind<INavigationService, IAvaloniaNavigationService>().As(Singleton).To<NavigationService>()
                 .Root<INavigationService>().Root<IAvaloniaNavigationService>()
             .RootBind<ITaskService>().As(Singleton).To<TaskService>()
@@ -68,29 +59,5 @@ internal class Program
         Avalonia.AppBuilderDesktopExtensions.UsePlatformDetect(appBuilder);
         Avalonia.LoggingExtensions.LogToTrace(appBuilder);
         Avalonia.ClassicDesktopStyleApplicationLifetimeExtensions.StartWithClassicDesktopLifetime(appBuilder, args);
-    }
-
-    [Obsolete("Not used")]
-    private static Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
-    {
-        try
-        {
-            var executingAssembly = Assembly.GetExecutingAssembly();
-            var referencedAssemblies = executingAssembly.GetReferencedAssemblies();
-            var assemblyNameFromReferences = referencedAssemblies.FirstOrDefault(a => a.Name == args.Name);
-
-            if (assemblyNameFromReferences != null)
-                return Assembly.Load(assemblyNameFromReferences);
-
-            var dllName = args.Name.Split(",")[0] + ".dll";
-            var alternativeAssemblyPath = Path.Combine(AssembliesPath, dllName);
-            return !string.IsNullOrEmpty(alternativeAssemblyPath) && File.Exists(alternativeAssemblyPath)
-                ? Assembly.LoadFrom(alternativeAssemblyPath)
-                : null;
-        }
-        catch (Exception)
-        {
-            return null;
-        }
     }
 }
